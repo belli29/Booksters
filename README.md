@@ -1,23 +1,33 @@
-# Code Institute
+# Booksters
 
-Welcome USER_NAME,
+[Click here to view the website]( https://belli29.github.io/fe-interactive-development/)
 
-We have preinstalled all of the tools you need to get started.
 
-To run a frontend application in GitPod, in the terminal, type:
+## Tutorial
 
-`python3 -m http.server`
 
-A blue button should appear to click: *Expose*,
 
-Another blue button should appear to click: *Open Browser*.
+### Purpose
 
-To run a backend python file, type `python3 app.py`, if your python file is named `app.py` of course.
 
-A blue button should appear to click: *Expose*,
 
-Another blue button should appear to click: *Open Browser*.
+### Features/Technologies
 
-In Gitpod you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the backend lessons. 
 
-Happy coding!
+
+## Testing
+
+
+
+## Deployment
+
+
+
+
+
+## Acknowledgments and contributions
+
+1.Code Institute full Gitpod template
+
+
+
