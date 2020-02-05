@@ -1,6 +1,6 @@
 # Booksters
 
-[Click here to view the website]( https://belli29.github.io/fe-interactive-development/)
+
 
 
 ## Tutorial
@@ -12,12 +12,14 @@
 
 
 ### Features/Technologies
-
+bootstrap 4 (bootstrap theme Clean Blog)
+Mongo DB (Atlas)
+local variables file(.gitignore)
 
 
 ## Testing
 
-
+unit testing
 
 ## Deployment
 

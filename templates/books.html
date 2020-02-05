@@ -1,13 +1,26 @@
-<html>
-    <head>
+{% extends 'base.html' %}
+{% block content %}
 
-    </head>
-    <body>
+<!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
         {% for book in books %}
-            {{book.book_title}}
-            {{book.book_author}}
-            {{book.book_genre}}
-            {{book.book_description}}
+            <div class="post-preview">
+            <a href="#">
+                <h2 class="post-title">
+                    {{book.book_title}}
+                </h2>
+                <h3 class="post-subtitle">
+                    {{book.book_description}}
+                </h3>
+            </a>
+            <p class="post-meta"> by
+                <a href="#">{{book.book_author}}</a>
+
+            </div>  
+            <hr>
         {% endfor %}
-    </body>
-</html>
+    </div>
+  </div>
+ {% endblock %}
