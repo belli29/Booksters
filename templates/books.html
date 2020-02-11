@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
-{% block content %}
 
-<!-- Main Content -->
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto">
-        {% for book in books %}
-            <div class="post-preview">
+{% block header %}
+    <h1>Find a book</h1>
+    <span class="subheading">seach field</span>
+{% endblock %}
+
+{% block content %}
+    {% for book in books %}
+        <div class="post-preview">
             <a href="#">
                 <h2 class="post-title">
                     {{book.book_title}}
@@ -17,10 +18,7 @@
             </a>
             <p class="post-meta"> by
                 <a href="#">{{book.book_author}}</a>
-
-            </div>  
-            <hr>
-        {% endfor %}
-    </div>
-  </div>
+        </div>  
+        <hr>
+    {% endfor %}
  {% endblock %}

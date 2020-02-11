@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>Writers</h1>
+{% endblock%}
+{% block content %}
+    {% for writer in writers %}
+        <div class="post-preview">
+            <a href="#">
+                <h2 class="post-title">
+                    {{writer.writer_name}}
+                </h2>
+            </a>
+        </div>  
+        <hr>
+    {% endfor %}
+ {% endblock %}

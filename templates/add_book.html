@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>Add a book</h1>   
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+            <form action="{{ url_for('insert_book') }}" method="POST">
+            <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                <label>Name of the book</label>
+                <input type="text" class="form-control" placeholder="Title" name="book_name" id="book_name" required data-validation-required-message="Please enter a title.">
+                <p class="help-block text-danger"></p>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                <label>Writer</label>
+                <input type="text" class="form-control" placeholder="Writer" name="book_writer" id="book_writer" required data-validation-required-message="Please enter a writer name.">
+                <p class="help-block text-danger"></p>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                <label>Choose a genre</label>
+                <select id="genre" name="genre_name">
+                    <option value="" disabled selected>Choose Genre</option>
+                    <option value="" >blu</option>
+                    {% for gen in genres %}
+                        <option value="{{gen.genre_name}}">{{gen.genre_name}}</option>
+                    {% endfor %}
+                </select>
+                <p class="help-block text-danger"></p>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                <label>Book Description</label>
+                <textarea id="book_description" placeholder="Description" name="book_description"></textarea>        
+                </div>
+            </div>
+            <br>
+            <div id="success"></div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" id="sendMessageButton">Add book</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+  
+{% endblock %}

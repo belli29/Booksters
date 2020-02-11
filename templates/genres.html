@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>Genres</h1>
+{% endblock%}
+{% block content %}
+    {% for genre in genres %}
+        <div class="post-preview">
+            <a href="#">
+                <h2 class="post-title">
+                    {{genre.genre_name}}
+                </h2>
+            </a>
+        </div>  
+        <hr>
+    {% endfor %}
+{% endblock %}

@@ -18,6 +18,28 @@ mongo = PyMongo(app)
 def get_books():
     return render_template('books.html', books=mongo.db.books.find())
 
+@app.route('/get_writers')
+def get_writers():
+    return render_template('writers.html', writers=mongo.db.writers.find())
+
+@app.route('/get_genres')
+def get_genres():
+    return render_template('genres.html', genres=mongo.db.genres.find())
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/add_book')
+def add_book():
+    return render_template('add_book.html', )
+
+@app.route('/insert_book', methods=["POST"])
+def insert_book():
+    books=mongo.db.tasks
+    books.insert_one(request.form.to_dict())
+    return redirect(url_for("get_books"))
+
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),
             port = int(os.environ.get('PORT')),
