@@ -32,11 +32,12 @@ def about():
 
 @app.route('/add_book')
 def add_book():
-    return render_template('add_book.html', )
+    return render_template('add_book.html', 
+                            genres= mongo.db.genres.find())
 
 @app.route('/insert_book', methods=["POST"])
 def insert_book():
-    books=mongo.db.tasks
+    books=mongo.db.books
     books.insert_one(request.form.to_dict())
     return redirect(url_for("get_books"))
 

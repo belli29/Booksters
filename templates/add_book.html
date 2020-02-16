@@ -10,34 +10,31 @@
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                 <label>Name of the book</label>
-                <input type="text" class="form-control" placeholder="Title" name="book_name" id="book_name" required data-validation-required-message="Please enter a title.">
-                <p class="help-block text-danger"></p>
+                <input type="text" class="form-control" placeholder="Title" name="book_title" id="book_title" required data-validation-required-message="Please enter a title.">
                 </div>
             </div>
+            
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                 <label>Writer</label>
-                <input type="text" class="form-control" placeholder="Writer" name="book_writer" id="book_writer" required data-validation-required-message="Please enter a writer name.">
-                <p class="help-block text-danger"></p>
+                <input type="text" class="form-control" placeholder="Writer" name="book_author" id="book_author" required data-validation-required-message="Please enter a writer name.">
                 </div>
             </div>
             <div class="control-group">
                 <div class="form-group col-xs-12 floating-label-form-group controls">
                 <label>Choose a genre</label>
-                <select id="genre" name="genre_name">
+                <select  class="custom-select" id="genre" name="genre_name">
                     <option value="" disabled selected>Choose Genre</option>
-                    <option value="" >blu</option>
                     {% for gen in genres %}
                         <option value="{{gen.genre_name}}">{{gen.genre_name}}</option>
                     {% endfor %}
                 </select>
-                <p class="help-block text-danger"></p>
                 </div>
             </div>
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                 <label>Book Description</label>
-                <textarea id="book_description" placeholder="Description" name="book_description"></textarea>        
+                <textarea id="book_description" rows= 20 placeholder="Description" name="book_description"></textarea>        
                 </div>
             </div>
             <br>
