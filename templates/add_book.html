@@ -28,19 +28,19 @@
                     {% for gen in genres %}
                         <option value="{{gen.genre_name}}">{{gen.genre_name}}</option>
                     {% endfor %}
-                </select>
+                </select><a class="badge badge-light" href="{{url_for ('add_genre')}}"><i class="fas fa-plus-circle"></i> Add Genre</a>
                 </div>
             </div>
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                 <label>Book Description</label>
-                <textarea id="book_description" rows= 20 placeholder="Description" name="book_description"></textarea>        
+                <textarea id="book_description" rows= 10 placeholder="Description" name="book_description"></textarea>        
                 </div>
             </div>
             <br>
             <div id="success"></div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" id="sendMessageButton">Add book</button>
+                <button type="submit" class="btn btn-primary" >Add book</button>
             </div>
             </form>
         </div>

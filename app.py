@@ -35,11 +35,21 @@ def add_book():
     return render_template('add_book.html', 
                             genres= mongo.db.genres.find())
 
+@app.route('/add_genre')
+def add_genre():
+    return render_template('add_genre.html')
+
 @app.route('/insert_book', methods=["POST"])
 def insert_book():
     books=mongo.db.books
     books.insert_one(request.form.to_dict())
     return redirect(url_for("get_books"))
+
+@app.route('/insert_genre', methods=["POST"])
+def insert_genre():
+    genres=mongo.db.genres
+    genres.insert_one(request.form.to_dict())
+    return redirect(url_for("add_book"))
 
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),
