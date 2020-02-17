@@ -18,10 +18,20 @@ mongo = PyMongo(app)
 def get_books():
     return render_template('books.html', books=mongo.db.books.find())
 
+@app.route('/get_book/<book_title>')
+def get_book(book_title):
+    book = mongo.db.books.find_one({"book_title":book_title})
+    return render_template('book.html', book = book)
+
 @app.route('/get_books_genre/<genre_name>')
 def get_books_genre(genre_name):
     books = mongo.db.books.find({"book_genre": genre_name})
-    return render_template('get_books_genre.html', books = books, genre=genre_name )
+    return render_template('get_books_genre.html', books = books, genre = genre_name )
+
+@app.route('/get_books_author/<author_name>')
+def get_books_author(author_name):
+    books = mongo.db.books.find({"book_author": author_name})
+    return render_template('get_books_author.html', books = books, author = author_name )
 
 @app.route('/get_authors')
 def get_authors():

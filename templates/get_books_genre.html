@@ -5,7 +5,7 @@
 {% block content %}
     {% for book in books %}
         <div class="post-preview">
-            <a href="#">
+            <a href="{{url_for('get_book', book_title=book.book_title)}}">
                 <h2 class="post-title">
                     {{book.book_title}}
                 </h2>
@@ -14,7 +14,7 @@
                 </h3>
             </a>
             <p class="post-meta"> by
-                <a href="#">{{book.book_author}}</a>
+                <a href="{{url_for('get_books_author', author_name=book.book_author)}}">{{book.book_author}}</a>
         </div>  
         <hr>
     {% endfor %}

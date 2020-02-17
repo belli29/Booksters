@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
-
 {% block header %}
-    <h1>Find a book</h1>
-    <span class="subheading">seach field</span>
+    <h1>{{author}}</h1>   
 {% endblock %}
-
 {% block content %}
     {% for book in books %}
         <div class="post-preview">
@@ -16,8 +13,6 @@
                     {{book.book_description}}
                 </h3>
             </a>
-            <p class="post-meta"> by
-                <a href="{{url_for('get_books_author', author_name=book.book_author)}}">{{book.book_author}}</a>
         </div>  
         <hr>
     {% endfor %}

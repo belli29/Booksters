@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block header %}
+    <div class="post-preview">
+        <h1>{{book.book_title}}</h1> 
+        <p class="post-meta"> by
+            <a href="{{url_for('get_books_author', author_name=book.book_author)}}">{{book.book_author}}</a> 
+        </p>
+    </div>
+{% endblock %}
+{% block content %}
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+            {{book.book_description}}
+            </div> 
+        </div> 
+    </div>
+</article>
+<hr>
+{% endblock %}
