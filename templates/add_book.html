@@ -15,9 +15,14 @@
             </div>
             
             <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                <label>Writer</label>
-                <input type="text" class="form-control" placeholder="Writer" name="book_author" id="book_author" required data-validation-required-message="Please enter a writer name.">
+                <div class="form-group col-xs-12 floating-label-form-group controls">
+                <label>Choose an author</label>
+                <select  class="custom-select" id="author" name="author name_name">
+                    <option value="" disabled selected>Choose Author</option>
+                    {% for auth in authors %}
+                        <option value="{{auth.author_name}}">{{auth.author_name}}</option>
+                    {% endfor %}
+                </select><a class="badge badge-light" href="{{url_for ('add_author')}}"><i class="fas fa-plus-circle"></i> Add Author</a>
                 </div>
             </div>
             <div class="control-group">

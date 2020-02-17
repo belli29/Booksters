@@ -5,7 +5,13 @@
 
 ## Tutorial
 
+## UX design
 
+user needs to add a genre and then apply for a book
+user can just add an author
+## problems
+
+author issue
 
 ### Purpose
 

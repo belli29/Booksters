@@ -23,9 +23,9 @@ def get_books_genre(genre_name):
     books = mongo.db.books.find({"book_genre": genre_name})
     return render_template('get_books_genre.html', books = books, genre=genre_name )
 
-@app.route('/get_writers')
-def get_writers():
-    return render_template('writers.html', writers=mongo.db.writers.find())
+@app.route('/get_authors')
+def get_authors():
+    return render_template('authors.html', authors=mongo.db.authors.find())
 
 @app.route('/get_genres')
 def get_genres():
@@ -38,11 +38,16 @@ def about():
 @app.route('/add_book')
 def add_book():
     return render_template('add_book.html', 
-                            genres= mongo.db.genres.find())
+                            genres= mongo.db.genres.find(),
+                            authors= mongo.db.authors.find())
 
 @app.route('/add_genre')
 def add_genre():
     return render_template('add_genre.html')
+
+@app.route('/add_author')
+def add_author():
+    return render_template('add_author.html')
 
 @app.route('/insert_book', methods=["POST"])
 def insert_book():
@@ -54,6 +59,12 @@ def insert_book():
 def insert_genre():
     genres=mongo.db.genres
     genres.insert_one(request.form.to_dict())
+    return redirect(url_for("add_book"))
+
+@app.route('/insert_author', methods=["POST"])
+def insert_author():
+    authors=mongo.db.authors
+    authors.insert_one(request.form.to_dict())
     return redirect(url_for("add_book"))
 
 if __name__ == '__main__':
