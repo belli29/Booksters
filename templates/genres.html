@@ -5,7 +5,7 @@
 {% block content %}
     {% for genre in genres %}
         <div class="post-preview">
-            <a href="#">
+            <a href="{{url_for('get_books_genre', genre_name=genre.genre_name)}}" >
                 <h2 class="post-title">
                     {{genre.genre_name}}
                 </h2>
