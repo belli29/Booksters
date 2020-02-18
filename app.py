@@ -18,10 +18,15 @@ mongo = PyMongo(app)
 def get_books():
     return render_template('books.html', books=mongo.db.books.find())
 
-@app.route('/get_book/<book_title>')
+@app.route('/book/<book_title>')
 def get_book(book_title):
     book = mongo.db.books.find_one({"book_title":book_title})
     return render_template('book.html', book = book)
+
+@app.route('/search_book/', methods=["POST"]) 
+def search_book():
+    book_title = request.form.get('book_title')
+    return redirect(url_for("get_book", book_title = book_title))
 
 @app.route('/get_books_genre/<genre_name>')
 def get_books_genre(genre_name):

@@ -1,8 +1,27 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>Find a book</h1>
-    <span class="subheading">seach field</span>
+    <h1>Looking for a book?</h1>
+    <span class="subheading">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <form action="{{ url_for('search_book') }}" method="POST">
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls">
+                                <label>Name of the book</label>
+                                <input type="text" class="form-control" placeholder="Title" name="book_title" id="book_title" required data-validation-required-message="Please enter a title.">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary" >Get it</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+         </div>   
+    </span>
 {% endblock %}
 
 {% block content %}
