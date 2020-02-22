@@ -24,8 +24,12 @@ def get_book(book_title):
     if book:
         return render_template('book.html', book = book)
     else:
-        return render_template('book.html', book = book)
+        return redirect(url_for("get_book_error"))
 
+@app.route('/book_not_found')
+def get_book_error():
+    return render_template('books.html', 
+                            books=mongo.db.books.find(), error_message=True)
 
 @app.route('/search_book/', methods=["POST"]) 
 def search_book():
