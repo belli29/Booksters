@@ -21,20 +21,24 @@ def get_books():
 @app.route('/book/<book_title>')
 def get_book(book_title):
     book = mongo.db.books.find_one({"book_title":book_title})
-    if book:
-        return render_template('book.html', book = book)
-    else:
-        return redirect(url_for("get_book_error"))
+    return render_template('book.html', book=book)
 
-@app.route('/book_not_found')
-def get_book_error():
+@app.route('/book_not_found/<book_input>')
+def get_book_error(book_input):
     return render_template('books.html', 
-                            books=mongo.db.books.find(), error_message=True)
+                            books=mongo.db.books.find(), 
+                            error_message=True,
+                            book_input=book_input)
 
 @app.route('/search_book/', methods=["POST"]) 
 def search_book():
-    book_title = request.form.get('book_title')
-    return redirect(url_for("get_book", book_title = book_title))
+    book_input = request.form.get('book_title')
+    book = mongo.db.books.find_one( { '$text': { '$search': book_input } } )
+    if book:
+        title = book["book_title"]
+        return redirect(url_for("get_book", book_title=title))
+    else:
+        return redirect(url_for("get_book_error", book_input=book_input))
 
 @app.route('/get_books_genre/<genre_name>')
 def get_books_genre(genre_name):
