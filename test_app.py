@@ -18,16 +18,25 @@ class TestApp(unittest.TestCase):
         the_test = app.test_client(self)
         book_not_found_name="qWertY29"
         book_url="/book_not_found/"+ book_not_found_name
-        book_string="We couldn't find "+book_not_found_name
+        book_string="We couldn't find "+ book_not_found_name
         response = the_test.get(book_url)
         self.assertIn(bytes(book_string, 'utf-8'), response.data)
 
     def test_found_get_book(self):
         the_test = app.test_client(self)
         book_found_name="christmas carol"
-        book_url="/book/"+ book_found_name
+        author_found_name="Charles Dickens"
+        book_url="/" + author_found_name + "/" + book_found_name
         response = the_test.get(book_url)
         self.assertIn(b'Charles Dickens', response.data)
+    
+    def test_author_has_many_books_get_book(self):
+        the_test = app.test_client(self)
+        book_found_name="christmas carol"
+        author_found_name="Charles Dickens"
+        book_url="/" + author_found_name + "/" + book_found_name
+        response = the_test.get(book_url)
+        self.assertIn(b'We have more books of this author. Check them out!', response.data)
 
 if __name__ == '__main__':
     unittest.main()

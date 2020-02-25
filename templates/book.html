@@ -4,6 +4,9 @@
         <h1>{{book.book_title}}</h1> 
         <p class="post-meta"> by
             <a href="{{url_for('get_books_author', author_name=book.book_author)}}">{{book.book_author}}</a> 
+            {% if author_list == True %}
+            <div class="d-inline-block help-block text-danger">We have more books of this author. Check them out!</div>
+            {% endif %} 
         </p>
     </div>
 {% endblock %}

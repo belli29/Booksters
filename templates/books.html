@@ -10,7 +10,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls">
                                 <label>Title or Author of the book</label>
-                                <input type="text" class="form-control" placeholder="Title or Author of the book" name="book_title" id="book_title" required>
+                                <input type="text" class="form-control" placeholder="Title or Author of the book" name="book_input" id="book_input" required>
                             </div>
                         </div>
                         <br>
@@ -31,7 +31,7 @@
 {% block content %}
     {% for book in books %}
         <div class="post-preview">
-            <a href="{{url_for('get_book', book_title=book.book_title)}}">
+            <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">
                 <h2 class="post-title">
                     {{book.book_title}}
                 </h2>

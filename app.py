@@ -18,10 +18,14 @@ mongo = PyMongo(app)
 def get_books():
     return render_template('books.html', books=mongo.db.books.find())
 
-@app.route('/book/<book_title>')
-def get_book(book_title):
-    book = mongo.db.books.find_one({"book_title":book_title})
-    return render_template('book.html', book=book)
+@app.route('/<book_author>/<book_title>')
+def get_book(book_author, book_title):
+    book = mongo.db.books.find_one({"book_title":book_title, "book_author":book_author})
+    list_by_author = list(mongo.db.books.find({"book_author":book_author}))
+    if len(list_by_author) > 1:
+        return render_template('book.html', book=book, author_list=True)
+    else:
+        return render_template('book.html', book=book)
 
 @app.route('/book_not_found/<book_input>')
 def get_book_error(book_input):
@@ -32,11 +36,12 @@ def get_book_error(book_input):
 
 @app.route('/search_book/', methods=["POST"]) 
 def search_book():
-    book_input = request.form.get('book_title')
+    book_input = request.form.get('book_input')
     book = mongo.db.books.find_one( { '$text': { '$search': book_input } } )
     if book:
         title = book["book_title"]
-        return redirect(url_for("get_book", book_title=title))
+        author = book["book_author"]
+        return redirect(url_for("get_book", book_title=title, book_author=author))
     else:
         return redirect(url_for("get_book_error", book_input=book_input))
 
