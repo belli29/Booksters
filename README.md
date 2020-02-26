@@ -21,6 +21,7 @@ author issue
 bootstrap 4 (bootstrap theme Clean Blog)
 Mongo DB (Atlas)
 local variables file(.gitignore)
+js (booksters.js)
 
 
 ## Testing

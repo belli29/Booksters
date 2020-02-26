@@ -16,7 +16,21 @@ mongo = PyMongo(app)
 @app.route('/')
 @app.route('/get_books')
 def get_books():
-    return render_template('books.html', books=mongo.db.books.find())
+    books=list(mongo.db.books.find())
+    for book in books:
+        rating=float(book['book_rating'])
+        star_rating=""
+        count=0
+        while count<5:
+            if rating < count+0.5:
+                star_rating += '✩'
+            else:
+                star_rating += '✭'
+            count += 1 
+        book['book_rating'] = star_rating
+        
+    print(type(books))
+    return render_template('books.html', books=books)
 
 @app.route('/<book_author>/<book_title>')
 def get_book(book_author, book_title):

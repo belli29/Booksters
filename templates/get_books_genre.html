@@ -9,12 +9,14 @@
                 <h2 class="post-title">
                     {{book.book_title}}
                 </h2>
+                <p class="post-meta"> by
+                    <a href="{{url_for('get_books_author', author_name=book.book_author)}}">{{book.book_author}}</a>
+                </p>
                 <h3 class="post-subtitle">
                     {{book.book_description}}
                 </h3>
             </a>
-            <p class="post-meta"> by
-                <a href="{{url_for('get_books_author', author_name=book.book_author)}}">{{book.book_author}}</a>
+            
         </div>  
         <hr>
     {% endfor %}
