@@ -13,6 +13,8 @@ user can just add an author
 
 author issue
 
+cursor issue . I decided to make it a list
+
 ### Purpose
 
 

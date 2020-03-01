@@ -33,13 +33,13 @@
         <div class="post-preview">
             <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">
                 <h2 class="post-title">
-                    {{book.book_title}}
+                    {{book.book_title.title()}}
                 </h2>
                 <p class="post-meta"> by
-                    <a href="{{url_for('get_books_author', author_name=book.book_author)}}">{{book.book_author}}</a>
+                    <a href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a>
                 </p>
                 <h3 class="post-subtitle">
-                    {{book.book_description}}
+                    {{book.book_short_description}}
                 </h3>
                 <h4 id= "rating" class="post-subtitle">{{book.book_rating}}</h4>
                 <h4>(based on {{book.book_votes}} votes )</h4>

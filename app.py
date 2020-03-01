@@ -13,10 +13,11 @@ app.config['MONGO_DBNAME'] = os.environ.get('MONGODB_NAME')
 app.config['MONGO_URI'] = os.environ.get('MONGO_URI')
 mongo = PyMongo(app)
 
-@app.route('/')
-@app.route('/get_books')
-def get_books():
-    books=list(mongo.db.books.find())
+# This turns the cursor object into a string
+# change the numeric review value to a visual 5 stars scale
+# add the attribute book_short_description
+def cursor_to_list(cursor_books):
+    books=list(cursor_books)
     for book in books:
         rating=float(book['book_rating'])
         star_rating=""
@@ -28,8 +29,14 @@ def get_books():
                 star_rating += '✭'
             count += 1 
         book['book_rating'] = star_rating
-        
-    print(type(books))
+        book['book_short_description'] = book['book_description'].split('.')[0] + '.'
+    return books
+
+@app.route('/')
+@app.route('/get_books')
+def get_books():
+    books_cursor=mongo.db.books.find()
+    books= cursor_to_list(books_cursor)
     return render_template('books.html', books=books)
 
 @app.route('/<book_author>/<book_title>')
@@ -60,13 +67,15 @@ def search_book():
         return redirect(url_for("get_book_error", book_input=book_input))
 
 @app.route('/get_books_genre/<genre_name>')
-def get_books_genre(genre_name):
-    books = mongo.db.books.find({"book_genre": genre_name})
+def get_books_by_genre(genre_name):
+    books_cursor = mongo.db.books.find({"book_genre": genre_name})
+    books= cursor_to_list(books_cursor)
     return render_template('get_books_genre.html', books = books, genre = genre_name )
 
 @app.route('/get_books_author/<author_name>')
-def get_books_author(author_name):
-    books = mongo.db.books.find({"book_author": author_name})
+def get_books_by_author(author_name):
+    books_cursor= mongo.db.books.find({"book_author": author_name})
+    books= cursor_to_list(books_cursor)
     return render_template('get_books_author.html', books = books, author = author_name )
 
 @app.route('/get_authors')
