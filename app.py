@@ -32,6 +32,22 @@ def cursor_to_list(cursor_books):
         book['book_short_description'] = book['book_description'].split('.')[0] + '.'
     return books
 
+# updates book ratings and number of votes based on user input
+@app.route('/insert_rating/<book_id>', methods=["POST"])
+def insert_rating(book_id):
+    books = mongo.db.books
+    book=books.find_one({"_id":ObjectId(book_id)})
+    book_rating_previous= int(book['book_rating']) * int(book['book_votes'])
+    book_votes= int(book['book_votes']) + 1
+    book_rating = (book_rating_previous + int(request.form.get('rating'))) / int(book['book_votes'])
+    books.update_one( {'_id': ObjectId(book_id)},
+                      {'$set': {
+                                "book_rating":book_rating,
+                                 "book_votes":book_votes
+                               }})
+    return redirect(url_for("get_book", book_author=book['book_author'], book_title =book['book_title']))
+
+
 @app.route('/')
 @app.route('/get_books')
 def get_books():
@@ -122,6 +138,13 @@ def insert_author():
     authors.insert_one(request.form.to_dict())
     return redirect(url_for("add_book"))
 
+@app.route('/vote/<book_title>')
+def update_rating(book_title):
+    book = mongo.db.books.find_one({"book_title": book_title})
+    print(book)
+    return render_template('update_rating.html', 
+                            book = book)
+    
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),
             port = int(os.environ.get('PORT')),

@@ -38,6 +38,12 @@ class TestApp(unittest.TestCase):
         response = the_test.get(book_url)
         self.assertIn(b'We have more books of this author. Check them out!', response.data)
     
-  
+    def test_curson_to_list(self):
+        the_test = app.test_client(self)
+        books= []
+        test_book={'book_rating' : '5'}
+        books.insert(0, test_book)
+        self.assertEqual(the_test.cursor_to_list(books)[0]['book_rating'], '✭✭✭✭✭')
+
 if __name__ == '__main__':
     unittest.main()
