@@ -42,8 +42,7 @@
                     {{book.book_short_description}}
                 </h3>
                 <h4 id= "rating" class="post-subtitle">{{book.book_rating}}</h4>
-                <h4>(based on {{book.book_votes}} votes )</h4>
-                
+                <h4>based on {{book.book_rating|length}} votes </h4>               
             </a>
            
         </div>  

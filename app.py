@@ -2,6 +2,8 @@ import os
 from flask import Flask, url_for, render_template, redirect, request
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from statistics import mean
+import array
 from os import path
 if path.exists("env.py"):
     import env
@@ -13,37 +15,44 @@ app.config['MONGO_DBNAME'] = os.environ.get('MONGODB_NAME')
 app.config['MONGO_URI'] = os.environ.get('MONGO_URI')
 mongo = PyMongo(app)
 
-# This turns the cursor object into a string
-# change the numeric review value to a visual 5 stars scale
-# add the attribute book_short_description
-def cursor_to_list(cursor_books):
-    books=list(cursor_books)
-    for book in books:
-        rating=float(book['book_rating'])
+
+# Creates a visual 5 stars scale from array of ratings
+def star_rating(book):
+        rating=book['book_rating']
+        mean_rating=mean(rating)
         star_rating=""
         count=0
         while count<5:
-            if rating < count+0.5:
+            if mean_rating < count+0.5:
                 star_rating += '✩'
             else:
                 star_rating += '✭'
             count += 1 
-        book['book_rating'] = star_rating
-        book['book_short_description'] = book['book_description'].split('.')[0] + '.'
+            book['book_rating'] = star_rating
+
+# Add the attribute book_short_description
+def short_description(book):
+    book['book_short_description'] = book['book_description'].split('.')[0] + '.'
+
+# Turns the cursor object into a string
+def cursor_to_list(cursor_books):
+    books=list(cursor_books)
+    for book in books:
+        star_rating(book)
+        short_description(book)    
     return books
 
-# updates book ratings and number of votes based on user input
+# updates book ratings
 @app.route('/insert_rating/<book_id>', methods=["POST"])
 def insert_rating(book_id):
     books = mongo.db.books
     book=books.find_one({"_id":ObjectId(book_id)})
-    book_rating_previous= int(book['book_rating']) * int(book['book_votes'])
-    book_votes= int(book['book_votes']) + 1
-    book_rating = (book_rating_previous + int(request.form.get('rating'))) / int(book['book_votes'])
+    new_rating= int(request.form.get('rating'))
+    book_rating=list(book['book_rating'])
+    new_list = book_rating.append(new_rating)
     books.update_one( {'_id': ObjectId(book_id)},
                       {'$set': {
-                                "book_rating":book_rating,
-                                 "book_votes":book_votes
+                                "book_rating":book_rating
                                }})
     return redirect(url_for("get_book", book_author=book['book_author'], book_title =book['book_title']))
 
@@ -58,6 +67,7 @@ def get_books():
 @app.route('/<book_author>/<book_title>')
 def get_book(book_author, book_title):
     book = mongo.db.books.find_one({"book_title":book_title, "book_author":book_author})
+    star_rating(book)
     list_by_author = list(mongo.db.books.find({"book_author":book_author}))
     if len(list_by_author) > 1:
         return render_template('book.html', book=book, author_list=True)
@@ -141,7 +151,6 @@ def insert_author():
 @app.route('/vote/<book_title>')
 def update_rating(book_title):
     book = mongo.db.books.find_one({"book_title": book_title})
-    print(book)
     return render_template('update_rating.html', 
                             book = book)
     
