@@ -20,8 +20,8 @@
         </div> 
     </div>
     <a href="{{url_for('update_rating', book_title= book.book_title)}}">
-        <h4 id= "rating" class="post-subtitle">{{book.book_rating}}</h4>
-        <h4>(based on {{book.book_votes}} votes )</h4>
+        <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
+        <h4>based on {{book.book_rating|length}} votes</h4>
     </a>
 </article>
 <hr>

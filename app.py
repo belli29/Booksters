@@ -18,7 +18,10 @@ mongo = PyMongo(app)
 
 # Creates a visual 5 stars scale from array of ratings
 def star_rating(book):
-        rating=book['book_rating']
+    rating=(book['book_rating'])
+    if rating==[]:
+        book['star_rating']='✩✩✩✩✩'
+    else:
         mean_rating=mean(rating)
         star_rating=""
         count=0
@@ -28,7 +31,7 @@ def star_rating(book):
             else:
                 star_rating += '✭'
             count += 1 
-            book['book_rating'] = star_rating
+        book['star_rating'] = star_rating
 
 # Add the attribute book_short_description
 def short_description(book):
@@ -61,7 +64,7 @@ def insert_rating(book_id):
 @app.route('/get_books')
 def get_books():
     books_cursor=mongo.db.books.find()
-    books= cursor_to_list(books_cursor)
+    books = cursor_to_list(books_cursor)
     return render_template('books.html', books=books)
 
 @app.route('/<book_author>/<book_title>')
@@ -133,7 +136,12 @@ def add_author():
 @app.route('/insert_book', methods=["POST"])
 def insert_book():
     books=mongo.db.books
-    books.insert_one(request.form.to_dict())
+    new_book=request.form.to_dict()
+    new_book['book_title'] = new_book['book_title'].lower()
+    new_book['book_author'] = new_book['book_author'].lower()
+    new_book['book_genre'] = new_book['book_genre'].lower()
+    new_book['book_rating']=[]
+    books.insert_one(new_book)
     return redirect(url_for("get_books"))
 
 @app.route('/insert_genre', methods=["POST"])
