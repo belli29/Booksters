@@ -9,8 +9,12 @@
             <form action="{{ url_for('insert_rating', book_id = book._id) }}" method="POST">
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
-                <label>Rating from 0 to 5</label>
-                <input type="int" min='1' max='5' class="form-control" placeholder="Rating from 0 to 5" name="rating" id="rating" required >
+                    <input type="int" name="rating" id="rating" required hidden>
+                    <span id="1" >✩</span>
+                    <span id="2" >✩</span>
+                    <span id="3" >✩</span>
+                    <span id="4" >✩</span>
+                    <span id="5" >✩</span>
                 </div>
             </div>
             <br>
@@ -21,5 +25,39 @@
         </div>
         </div>
     </div>
-  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    
+    <!-- modifies the DOM as user interacts with the mouse and records used choiche-->
+    <script type="text/javascript">
+        function update_rating(){
+            var rating
+            var starsArray=['1','2','3','4','5']
+            for (s of starsArray) {
+                                    // records the rating chosen and visually highlights stars
+                                     $('#'.concat(s)).click(function() {
+                                                                        $('#rating').val(this.id)
+                                                                        var index = starsArray.indexOf(this.id);                                               
+                                                                        for (x of starsArray.slice(0 , index+1)) {
+                                                                            $('#'.concat(x)).html('✭');
+                                                                            };
+                                                                        for (x of starsArray.slice(index+1)) {
+                                                                            $('#'.concat(x)).html('✩');
+                                                                            };
+                                                                        });
+                                    // as mouse passes over, starts are highligthed                                    
+                                    $('#'.concat(s)).mouseover(function() {
+                                                                            var index = starsArray.indexOf(this.id);                                               
+                                                                            for (x of starsArray.slice(0 , index+1)) {
+                                                                                $('#'.concat(x)).html('✭');
+                                                                                };
+                                                                            for (x of starsArray.slice(index+1)) {
+                                                                                $('#'.concat(x)).html('✩');
+                                                                                };
+                                                                            });
+                                    };
+            };
+        update_rating()    
+    </script>
 {% endblock %}
+
+
