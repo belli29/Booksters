@@ -59,7 +59,7 @@ def insert_rating(book_id):
                                }})
     return redirect(url_for("get_book", book_author=book['book_author'], book_title =book['book_title']))
 
-
+# gets all books in DB
 @app.route('/')
 @app.route('/get_books')
 def get_books():
@@ -67,6 +67,7 @@ def get_books():
     books = cursor_to_list(books_cursor)
     return render_template('books.html', books=books)
 
+# gets a spefic book in DB
 @app.route('/<book_author>/<book_title>')
 def get_book(book_author, book_title):
     book = mongo.db.books.find_one({"book_title":book_title, "book_author":book_author})
@@ -75,6 +76,7 @@ def get_book(book_author, book_title):
     if len(list_by_author) > 1:
         return render_template('book.html', book=book, author_list=True)
     else:
+        print(book)
         return render_template('book.html', book=book)
 
 @app.route('/book_not_found/<book_input>')
@@ -119,6 +121,7 @@ def get_genres():
 def about():
     return render_template('about.html')
 
+# renders add_book.html
 @app.route('/add_book')
 def add_book():
     return render_template('add_book.html', 
@@ -133,6 +136,7 @@ def add_genre():
 def add_author():
     return render_template('add_author.html')
 
+# updates DB with a new document
 @app.route('/insert_book', methods=["POST"])
 def insert_book():
     books=mongo.db.books
