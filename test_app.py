@@ -25,7 +25,7 @@ class TestApp(unittest.TestCase):
                 "book_description":description,
                 "book_rating":rating
                 }
-    
+    test_book_url= "/test author/test title" 
     ########################
     #### helper methods ####
     ########################
@@ -77,12 +77,11 @@ class TestApp(unittest.TestCase):
     # tests response when searcing for a book present in DB
     def test_found_get_book(self):
         TestApp.insert_test_book(self, TestApp.test_book)
-        book_url= "/test author/test title" 
-        response=self.server_response(book_url)
+        response=self.server_response(self.test_book_url)
         try:
-            self.assertIn(TestApp.title.title().encode(), response.data)
-            self.assertIn(TestApp.author.title().encode(), response.data)
-            self.assertIn(TestApp.description.encode(), response.data)
+            self.assertIn(self.title.title().encode(), response.data)
+            self.assertIn(self.author.title().encode(), response.data)
+            self.assertIn(self.description.encode(), response.data)
         finally:
             TestApp.remove_test_book(self, TestApp.test_book)
     
@@ -96,12 +95,22 @@ class TestApp(unittest.TestCase):
     
     # tests average rating calculation and number of stars displayed
     def test_star_rating(self): 
-        self.test_book['book_rating'] = [4,2]
-        TestApp.insert_test_book(self, self.test_book)
-        book_url= "/test author/test title" 
-        response=self.server_response(book_url)
+        self.local_test_book= self.test_book
+        self.local_test_book['book_rating'] = [4,2]
+        TestApp.insert_test_book(self, self.local_test_book) 
+        response=self.server_response(self.test_book_url)
         try:
             self.assertIn('✭✭✭✩✩'.encode(), response.data)
+        finally:
+            TestApp.remove_test_book(self, self.local_test_book)
+
+    # checks if the description is shortened on the main page
+    def test_description_is_shortened(self):
+        TestApp.insert_test_book(self, TestApp.test_book)
+        response=self.server_response("/")
+        try:
+            self.assertIn(b"test description that ends here.", response.data)
+            self.assertNotIn(b" And, then, goes on.", response.data)
         finally:
             TestApp.remove_test_book(self, self.test_book)
 
