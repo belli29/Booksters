@@ -111,15 +111,6 @@ class TestApp(unittest.TestCase):
             self.assertNotIn(b" And, then, goes on.", response.data)
         finally:
             TestApp.remove_test_book(self, self.test_book)
-   
-    # checks what happens if user tries to add a book with same title and author of aone already present 
-    def test_book_already_in_db(self,):
-        with app.test_request_context('/insert_book'):
-            #with patch('app.insert_book.request.request') as mocked_get:
-            new_book= self.test_book
-            response=self.server_response("/insert_book")
-            self.assertIn(b"This book already exists in the database!", response.data)
-        
 
 if __name__ == '__main__':
     unittest.main()
