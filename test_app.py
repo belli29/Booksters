@@ -2,6 +2,7 @@ import os
 import unittest
 from flask import Flask, url_for, render_template, redirect, request
 from flask_pymongo import PyMongo
+from unittest.mock import patch
 from app import app
 class TestApp(unittest.TestCase):
     
@@ -32,7 +33,7 @@ class TestApp(unittest.TestCase):
     
     # server response to specific url request
     def server_response(self, page):
-        return self.the_test.get(page)
+        return self.test_client.get(page)
     
     # inserts a test book in Mongo DB
     def insert_test_book(self, book):
@@ -47,11 +48,8 @@ class TestApp(unittest.TestCase):
    
     # executed prior to each test
     def setUp(self):
-        self.the_test = app.test_client()
-        app.config['MONGO_DBNAME'] = os.environ.get('MONGODB_NAME')
-        app.config['MONGO_URI'] = os.environ.get('MONGO_URI')
-
-    
+        self.test_client = app.test_client()
+        
     # executed after each test  
     def tearDown(self):
         pass
@@ -113,6 +111,15 @@ class TestApp(unittest.TestCase):
             self.assertNotIn(b" And, then, goes on.", response.data)
         finally:
             TestApp.remove_test_book(self, self.test_book)
+   
+    # checks what happens if user tries to add a book with same title and author of aone already present 
+    def test_book_already_in_db(self,):
+        with app.test_request_context('/insert_book'):
+            #with patch('app.insert_book.request.request') as mocked_get:
+            new_book= self.test_book
+            response=self.server_response("/insert_book")
+            self.assertIn(b"This book already exists in the database!", response.data)
+        
 
 if __name__ == '__main__':
     unittest.main()

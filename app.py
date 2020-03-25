@@ -1,5 +1,5 @@
 import os
-from flask import Flask, url_for, render_template, redirect, request
+from flask import Flask, url_for, render_template, redirect, request, flash
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from statistics import mean
@@ -13,6 +13,7 @@ app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = os.environ.get('MONGODB_NAME')
 app.config['MONGO_URI'] = os.environ.get('MONGO_URI')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 mongo = PyMongo(app)
 
 
@@ -141,11 +142,14 @@ def add_author():
 def insert_book():
     books=mongo.db.books
     new_book=request.form.to_dict()
-    new_book['book_title'] = new_book['book_title'].lower()
-    new_book['book_author'] = new_book['book_author'].lower()
-    new_book['book_genre'] = new_book['book_genre'].lower()
-    new_book['book_rating']=[]
-    books.insert_one(new_book)
+    if books.count_documents({"book_title": new_book['book_title'].lower(), "book_author": new_book['book_author']}, limit=1) == 0:
+        new_book['book_title'] = new_book['book_title'].lower()
+        new_book['book_author'] = new_book['book_author'].lower()
+        new_book['book_genre'] = new_book['book_genre'].lower()
+        new_book['book_rating']= []
+        books.insert_one(new_book)
+    else:
+        flash("This book already exists in the database!")
     return redirect(url_for("get_books"))
 
 @app.route('/insert_genre', methods=["POST"])
