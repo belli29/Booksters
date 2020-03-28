@@ -148,6 +148,7 @@ def insert_book():
         new_book['book_genre'] = new_book['book_genre'].lower()
         new_book['book_rating']= []
         books.insert_one(new_book)
+        flash("Thanks for adding this book to our database!")
     else:
         flash("This book already exists in the database!")
     return redirect(url_for("get_books"))
