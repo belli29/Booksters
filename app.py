@@ -148,21 +148,31 @@ def insert_book():
         new_book['book_genre'] = new_book['book_genre'].lower()
         new_book['book_rating']= []
         books.insert_one(new_book)
-        flash("Thanks for adding this book to our database!")
+        flash(f"Thanks for adding {new_book['book_title']} to our database!")
     else:
-        flash("This book already exists in the database!")
+        flash(f"{new_book['book_title']} already exists in the database!")
     return redirect(url_for("get_books"))
 
 @app.route('/insert_genre', methods=["POST"])
 def insert_genre():
     genres=mongo.db.genres
-    genres.insert_one(request.form.to_dict())
+    new_genre=request.form.to_dict()
+    if genres.count_documents({"genre_name": new_genre['genre_name'].lower()}, limit=1) == 0:
+        genres.insert_one(new_genre)
+        flash(f"Thanks for adding {new_genre['genre_name'].title()} to our database!")
+    else:
+        flash(f"The genre {new_genre['genre_name'].title()} already exists in the database!")
     return redirect(url_for("add_book"))
 
 @app.route('/insert_author', methods=["POST"])
 def insert_author():
     authors=mongo.db.authors
-    authors.insert_one(request.form.to_dict())
+    new_author=request.form.to_dict()
+    if authors.count_documents({"author_name": new_author['author_name'].lower()}, limit=1) == 0:
+        authors.insert_one(new_author)
+        flash(f"Thanks for adding {new_author['author_name'].title()} to our database!")
+    else:
+        flash(f"{new_author['author_name'].title()} already exists in the database!")
     return redirect(url_for("add_book"))
 
 @app.route('/vote/<book_title>')
