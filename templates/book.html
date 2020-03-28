@@ -19,15 +19,20 @@
             </div> 
         </div> 
         <div class="row">
-            <a href="{{'https://www.bookster.store.com/'+book.book_title}}">
-                <h3>Buy it here!</h3>
-            </a>
+            <div class="col-lg-8 col-md-10 mx-auto text-center">
+                <a href="{{url_for('update_rating', book_title= book.book_title)}}">
+                    <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
+                    <h4>based on {{book.book_rating|length}} votes</h4>
+                </a>
+            </div>
         </div>
-        <div class="row">
-            <a href="{{url_for('update_rating', book_title= book.book_title)}}">
-                <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
-                <h4>based on {{book.book_rating|length}} votes</h4>
-            </a>
+        <hr>
+        <div class="row" >
+            <div class="col-lg-8 col-md-10 mx-auto text-center">
+                <a href="{{'https://www.bookster.store.com/'+book.book_title}}">
+                    <h3>Buy it here!</h3>
+                </a>
+            </div>
         </div>
     </div>   
 </article>

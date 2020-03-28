@@ -3,7 +3,7 @@
     <h1>How would you rate {{book.book_title.title()}} ?</h1>   
 {% endblock %}
 {% block content %}
-    <div class="container">
+    <div class="container text-center">
         <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
             <form action="{{ url_for('insert_rating', book_id = book._id) }}" method="POST">
@@ -26,7 +26,6 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
     <!-- modifies the DOM as user interacts with the mouse and records used choiche-->
     <script type="text/javascript">
         function update_rating(){
