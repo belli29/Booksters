@@ -1,0 +1,7 @@
+.book_item {
+    padding: 10px;
+    text-align: center;
+}
+.book_item:hover {
+      transform: scale(1.01);
+}

@@ -30,7 +30,7 @@
 
 {% block content %}
     {% for book in books %}
-        <div class="post-preview">
+        <div class="post-preview book_item">
             <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">
                 <h2 class="post-title">
                     {{book.book_title.title()}}
@@ -38,9 +38,9 @@
                 <p class="post-meta"> by
                     <a href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a>
                 </p>
-                <h3 class="post-subtitle">
+                <p class="post-subtitle">
                     {{book.book_short_description}}
-                </h3>
+                </p>
                 <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
                 <h4>based on {{book.book_rating|length}} votes </h4>               
             </a>

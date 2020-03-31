@@ -20,10 +20,11 @@ cursor issue . I decided to make it a list
 
 
 ### Features/Technologies
-bootstrap 4 (bootstrap theme Clean Blog)
+bootstrap 4 
 Mongo DB (Atlas)
 local variables file(.gitignore)
 js (booksters.js)
+
 
 
 ## Testing
@@ -40,5 +41,7 @@ Heroku
 
 1.Code Institute full Gitpod template
 
+2.Pictures used are taken from stocksnap.io (Creative Commons CC0) 
 
+3.Bootstrap theme Clean Blog
 

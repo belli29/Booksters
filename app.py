@@ -11,11 +11,12 @@ if path.exists("env.py"):
 
 app = Flask(__name__)
 
+# eviroment variables
 app.config['MONGO_DBNAME'] = os.environ.get('MONGODB_NAME')
 app.config['MONGO_URI'] = os.environ.get('MONGO_URI')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-mongo = PyMongo(app)
 
+mongo = PyMongo(app)
 
 # Creates a visual 5 stars scale from array of ratings
 def star_rating(book):
@@ -85,7 +86,7 @@ def get_book_error(book_input):
     return render_template('books.html', 
                             books=mongo.db.books.find(), 
                             error_message=True,
-                            book_input=book_input)
+                            book_input=book_input.title())
 
 @app.route('/search_book/', methods=["POST"]) 
 def search_book():
