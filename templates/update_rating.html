@@ -8,16 +8,18 @@
         <div class="col-lg-8 col-md-10 mx-auto">
             <form action="{{ url_for('insert_rating', book_id = book._id) }}" method="POST">
             <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                    <input type="int" name="rating" id="rating" required hidden>
-                    <span id="1" >✩</span>
-                    <span id="2" >✩</span>
-                    <span id="3" >✩</span>
-                    <span id="4" >✩</span>
-                    <span id="5" >✩</span>
-                </div>
+                <h4>
+                    <div class=" controls post-subtitle rating-star">
+                        <input type="int" name="rating" id="rating" required hidden>
+                        <span id="1" >✩</span>
+                        <span id="2" >✩</span>
+                        <span id="3" >✩</span>
+                        <span id="4" >✩</span>
+                        <span id="5" >✩</span>
+                    </div>
+                </h4>
             </div>
-            <br>
+            <hr>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary" >Rate this book!</button>
             </div>
@@ -37,7 +39,7 @@
                                                                         $('#rating').val(this.id)
                                                                         var index = starsArray.indexOf(this.id);                                               
                                                                         for (x of starsArray.slice(0 , index+1)) {
-                                                                            $('#'.concat(x)).html('✭');
+                                                                            $('#'.concat(x)).html('★');
                                                                             };
                                                                         for (x of starsArray.slice(index+1)) {
                                                                             $('#'.concat(x)).html('✩');
@@ -47,7 +49,7 @@
                                     $('#'.concat(s)).mouseover(function() {
                                                                             var index = starsArray.indexOf(this.id);                                               
                                                                             for (x of starsArray.slice(0 , index+1)) {
-                                                                                $('#'.concat(x)).html('✭');
+                                                                                $('#'.concat(x)).html('★');
                                                                                 };
                                                                             for (x of starsArray.slice(index+1)) {
                                                                                 $('#'.concat(x)).html('✩');

@@ -29,9 +29,9 @@ def star_rating(book):
         count=0
         while count<5:
             if mean_rating < count+0.5:
-                star_rating += '✩'
+                star_rating += '☆'
             else:
-                star_rating += '✭'
+                star_rating += '★'
             count += 1 
         book['star_rating'] = star_rating
 
