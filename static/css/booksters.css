@@ -5,6 +5,32 @@
 .book_item:hover {
       transform: scale(1.01);
 }
-.rating-star {
-      color:#0085A1
+
+.stars {
+      color:#0085A1;
+}
+#new-book-description{
+    width: 100%
+}
+
+#new-book-description{
+    width: 100%
+}
+#author-book-page{
+    color: #fff
+}
+
+#author-book-page:hover{
+    color: #0085A1
+}
+
+#buy-it{
+    transform: rotate(-5deg);
+    -webkit-transform: rotate(-5deg);
+    -ms-transform: rotate(-5deg);
+    -o-transform: rotate(-5deg);
+}
+
+.flashes{
+    font-weight: 500;
 }

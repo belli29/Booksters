@@ -9,13 +9,13 @@
             <form action="{{ url_for('insert_rating', book_id = book._id) }}" method="POST">
             <div class="control-group">
                 <h4>
-                    <div class=" controls post-subtitle rating-star">
-                        <input type="int" name="rating" id="rating" required hidden>
-                        <span id="1" >✩</span>
-                        <span id="2" >✩</span>
-                        <span id="3" >✩</span>
-                        <span id="4" >✩</span>
-                        <span id="5" >✩</span>
+                    <div class=" controls post-subtitle">
+                        <input type="int" name="rating" id="rating" hidden required>
+                        <span class="stars" id="1" >✩</span>
+                        <span class="stars" id="2" >✩</span>
+                        <span class="stars" id="3" >✩</span>
+                        <span class="stars" id="4" >✩</span>
+                        <span class="stars" id="5" >✩</span>
                     </div>
                 </h4>
             </div>
@@ -27,16 +27,17 @@
         </div>
         </div>
     </div>
+    <!-- importing jquery-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- modifies the DOM as user interacts with the mouse and records used choiche-->
+    <!-- modifies the DOM (stars) and records best choice in $('#rating')-->
     <script type="text/javascript">
         function update_rating(){
             var rating
             var starsArray=['1','2','3','4','5']
             for (s of starsArray) {
-                                    // records the rating chosen and visually highlights stars
+                                    // records the rating chosen in #rating and visually highlights stars
                                      $('#'.concat(s)).click(function() {
-                                                                        $('#rating').val(this.id)
+                                                                        $('#rating').val(this.id);
                                                                         var index = starsArray.indexOf(this.id);                                               
                                                                         for (x of starsArray.slice(0 , index+1)) {
                                                                             $('#'.concat(x)).html('★');

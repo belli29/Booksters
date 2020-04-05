@@ -16,7 +16,7 @@ p {
 }
 
 p a {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 h1,
@@ -30,12 +30,13 @@ h6 {
 }
 
 a {
-  color: #212529;
+  color: black;
   transition: all 0.2s;
 }
 
 a:focus, a:hover {
   color: #0085A1;
+  text-decoration:none
 }
 
 blockquote {
@@ -216,7 +217,7 @@ header.masthead .site-heading h1 {
 header.masthead .page-heading .subheading,
 header.masthead .site-heading .subheading {
   font-size: 24px;
-  font-weight: 300;
+  font-weight: 800;
   line-height: 1.1;
   display: block;
   margin: 10px 0 0;
@@ -300,7 +301,7 @@ header.masthead .post-heading .meta a {
 }
 
 .post-preview > .post-meta > a:focus, .post-preview > .post-meta > a:hover {
-  text-decoration: underline;
+  text-decoration: none;
   color: #0085A1;
 }
 
@@ -362,7 +363,7 @@ header.masthead .post-heading .meta a {
 }
 
 .floating-label-form-group-with-focus label {
-  color: #0085A1;
+  color: #fff;
 }
 
 form .form-group:first-child .floating-label-form-group {

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, url_for, render_template, redirect, request, flash
+from flask import Flask, url_for, render_template, redirect, request, flash, json, jsonify
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from statistics import mean
@@ -78,7 +78,6 @@ def get_book(book_author, book_title):
     if len(list_by_author) > 1:
         return render_template('book.html', book=book, author_list=True)
     else:
-        print(book)
         return render_template('book.html', book=book)
 
 @app.route('/book_not_found/<book_input>')
@@ -123,6 +122,26 @@ def get_genres():
 def about():
     return render_template('about.html')
 
+@app.route('/stats')
+def stats():
+    books=list(mongo.db.books.find())
+    book_list=[]
+    for book in books:
+        mean_rating=round(mean (book["book_rating"]),1)
+        votes=len(book["book_rating"])
+        book_list.append({
+                        "book_title":book["book_title"], 
+                        "book_author":book["book_author"],
+                        "book_rating":mean_rating,
+                        "book_votes":votes 
+                        })
+    top_rated = max(book_list, key = lambda x: x["book_rating"])
+    top_voted = max(book_list, key = lambda x: x["book_votes"])
+    return render_template('stats.html', 
+                            top_rated = top_rated, 
+                            top_voted= top_voted,
+                            authors= mongo.db.authors.find())
+
 # renders add_book.html
 @app.route('/add_book')
 def add_book():
@@ -149,9 +168,9 @@ def insert_book():
         new_book['book_genre'] = new_book['book_genre'].lower()
         new_book['book_rating']= []
         books.insert_one(new_book)
-        flash(f"Thanks for adding {new_book['book_title']} to our database!")
+        flash(f"Thanks for adding {new_book['book_title'].title()} to our database!")
     else:
-        flash(f"{new_book['book_title']} already exists in the database!")
+        flash(f"{new_book['book_title'].title()} by {new_book['book_author'].title()} already exists in the database!")
     return redirect(url_for("get_books"))
 
 @app.route('/insert_genre', methods=["POST"])
@@ -181,7 +200,24 @@ def update_rating(book_title):
     book = mongo.db.books.find_one({"book_title": book_title})
     return render_template('update_rating.html', 
                             book = book)
-    
+
+# identify the best rated book of author selected by user and return data (JSON format) to client side 
+@app.route('/best_book_author/', methods=['POST'])
+def best_book_author():
+    # POST request
+    author=request.get_json()["author"].lower()
+    best_book_list=[]
+    books_author = list(mongo.db.books.find({"book_author": author}))
+    for book in books_author:
+        mean_rating=round(mean (book["book_rating"]),1)
+        best_book_list.append({
+            "book_title":book["book_title"].title(), 
+            "book_rating":mean_rating,
+            })
+    best_book = max(best_book_list, key = lambda x: x["book_rating"])
+    best_book_json = json.dumps(best_book)
+    return best_book_json 
+   
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),
             port = int(os.environ.get('PORT')),

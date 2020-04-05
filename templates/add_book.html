@@ -16,30 +16,30 @@
             
             <div class="control-group">
                 <div class="form-group col-xs-12 floating-label-form-group controls">
-                <label>Choose an author</label>
-                <select  class="custom-select" id="book_author" name="book_author" required>
-                    <option value="" disabled selected>Choose Author</option>
-                    {% for auth in authors %}
-                        <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
-                    {% endfor %}
-                </select><a class="badge badge-light" href="{{url_for ('add_author')}}"><i class="fas fa-plus-circle"></i> Add Author</a>
+                    <label>Choose an author</label>
+                    <select  class="custom-select" id="book_author" name="book_author" required>
+                        <option value="" disabled selected>Choose Author</option>
+                        {% for auth in authors %}
+                            <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
+                        {% endfor %}
+                    </select><a class="badge badge-light" href="{{url_for ('add_author')}}"><i class="fas fa-plus-circle"></i> Add Author</a>
                 </div>
             </div>
             <div class="control-group">
                 <div class="form-group col-xs-12 floating-label-form-group controls">
-                <label>Choose a genre</label>
-                <select  class="custom-select" id="book_genre" name="book_genre" required>
-                    <option value="" disabled selected>Choose Genre</option>
-                    {% for gen in genres %}
-                        <option value="{{gen.genre_name}}">{{gen.genre_name.title()}}</option>
-                    {% endfor %}
-                </select><a class="badge badge-light" href="{{url_for ('add_genre')}}"><i class="fas fa-plus-circle"></i> Add Genre</a>
+                    <label>Choose a genre</label>
+                    <select  class="custom-select" id="book_genre" name="book_genre" required>
+                        <option value="" disabled selected>Choose Genre</option>
+                        {% for gen in genres %}
+                            <option value="{{gen.genre_name}}">{{gen.genre_name.title()}}</option>
+                        {% endfor %}
+                    </select><a class="badge badge-light" href="{{url_for ('add_genre')}}"><i class="fas fa-plus-circle"></i> Add Genre</a>
                 </div>
             </div>
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls ">
-                <label>Book Description</label>
-                <textarea id="book_description" rows= 10 placeholder="Description" name="book_description" required></textarea>        
+                    <label>Book Description</label>
+                    <textarea id="new-book-description" rows= 10 placeholder="Description" name="book_description" required></textarea>        
                 </div>
             </div>
             <br>

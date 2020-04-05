@@ -9,8 +9,8 @@
                     <form action="{{ url_for('search_book') }}" method="POST">
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls">
-                                <label>Title or Author of the book</label>
-                                <input type="text" class="form-control" placeholder="Title or Author of the book" name="book_input" id="book_input" required>
+                                <label class="text-center">Title or Author of the book</label>
+                                <input type="text" class="form-control text-center" placeholder="Title or Author of the book" name="book_input" id="book_input" required>
                             </div>
                         </div>
                         <br>
@@ -35,16 +35,16 @@
                 <h2 class="post-title">
                     {{book.book_title.title()}}
                 </h2>
-                <p class="post-meta"> by
-                    <a href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a>
-                </p>
-                <p class="post-subtitle">
-                    {{book.book_short_description}}
-                </p>
-                <h4 id= "rating" class="post-subtitle rating-star">{{book.star_rating}}</h4>
-                <h4>based on {{book.book_rating|length}} votes </h4>               
             </a>
-           
+            <p class="post-meta"> by
+                <a href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a>
+            </p>
+            <p class="post-subtitle">
+                {{book.book_short_description}}
+            </p>
+            <h4 class="post-subtitle stars">{{book.star_rating}}</h4>
+            <p class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</p>           
+                
         </div>  
         <hr>
     {% endfor %}

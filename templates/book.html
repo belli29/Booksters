@@ -2,10 +2,15 @@
 {% block header %}
     <div class="post-preview">
         <h1>{{book.book_title.title()}}</h1> 
-        <p class="post-meta"> by
-            <a href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a> 
+        <p> by
+            <h5>
+                <a id="author-book-page" href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a> 
+            </h5>
             {% if author_list == True %}
-            <div class="d-inline-block help-block text-danger">We have more books of this author. Check them out!</div>
+                <div class="badge badge-danger">
+                    We have more books of this author.
+                    <br>Click on the author name to check them out!
+                </div>
             {% endif %} 
         </p>
     </div>
@@ -14,24 +19,30 @@
 <article>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto">
+            <div class="col-md-10 mx-auto">
             {{book.book_description}}
             </div> 
         </div> 
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto text-center">
-                <a href="{{url_for('update_rating', book_title= book.book_title)}}">
-                    <h4 id= "rating" class="post-subtitle rating-star">{{book.star_rating}}</h4>
-                    <h4>based on {{book.book_rating|length}} votes</h4>
-                </a>
+                <p>
+                    <a href="{{url_for('update_rating', book_title= book.book_title)}}">
+                        <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
+                    </a>
+                    <div class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</div> 
+                    
+                </p>
             </div>
+            
         </div>
-        <hr>
         <div class="row" >
             <div class="col-lg-8 col-md-10 mx-auto text-center">
-                <a href="{{'https://www.bookster.store.com/'+book.book_title}}">
-                    <h3>Buy it here!</h3>
-                </a>
+                <p>
+                    <h1>
+                        <a id="buy-it" class=" badge badge-danger" href="{{'https://www.bookster.store.com/'+book.book_title}}">Buy it here!</a>
+                    </h1>
+                </p>
+                
             </div>
         </div>
     </div>   

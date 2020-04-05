@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>Stats</h1>
+{% endblock%}
+{% block content %}
+    <h1 class="text-center">What is the most voted book? </h1>
+    <p>The book that was votes mosted times is {{ top_voted.book_title.title() }} by {{ top_voted.book_author.title()  }}. Users have rated it {{ top_voted.book_votes }} times.</p>
+    <hr>
+    <h1  class="text-center">What is the book that people rated the highest? </h1>
+    <p>The book that has the highest rating is {{ top_rated.book_title.title() }} by {{ top_rated.book_author.title() }} with {{ top_rated.book_rating }}/5 score </p>
+    <hr>
+    <h1  class="text-center">
+        <span class="d-inline">What is the highest rated book of </span>
+        <span class="d-inline">
+            <div class="control-group">
+                <div class="form-group col-xs-1 floating-label-form-group controls">
+                    <label>Choose an author</label>
+                        <select  class="custom-select" id="book_author" name="book_author" required>
+                            <option value="" disabled selected>Choose Author</option>
+                            {% for auth in authors %}
+                                <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+            </div>
+        </span>
+        <!--<form action="{{ url_for('best_book_author') }}" id="best-book" method="POST">
+            <input type="text" name="author" id="author" hidden required>
+        </form>-->
+    </h1>
+    <p>The book of <span id="author-selected">(Choose Author)</span> that has the highest rating is <span id="best-book-title">(title)</span> with <span id="best-book-rating">(rating)</span>/5 score </p>
+    <hr>
+<!-- importing jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- copies the choice of user into the paragraph and find the highest rated book-->
+<script>
+    $("select#book_author").change(function () {
+        author=$(this).find("option:selected").text();
+        //copies user choice
+        $("#author-selected").text(author);
+        //send a request with user choice to the server 
+        fetch('/best_book_author/', {
+            method: 'POST',
+            // JSON payload
+            body: JSON.stringify({
+                "author": author
+            }),
+            headers: new Headers({
+                "content-type": "application/json"
+            }),
+            cache: "no-cache",
+            credentials: "include"
+        //collects server response
+        }).then(function (response) { 
+            return response.text();
+        //parse server response and amenes DOM accordigly 
+        }).then(function (text) {
+            let bestBookObject= JSON.parse(text);
+            $("#best-book-title").text(bestBookObject.book_title);
+            $("#best-book-rating").text(bestBookObject.book_rating);
+        });
+    }) ;
+</script>
+{% endblock %}
+
+
+
