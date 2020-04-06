@@ -53,8 +53,10 @@
         //parse server response and amends DOM accordigly 
         }).then(function (text) {
             let bestBookObject= JSON.parse(text);
-            $("#best-book-statement").text(`The book of ${author} that was rated highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5`);
-        });
+            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5`);
+        }).catch(function () {
+            $("#best-book-statement").text(`There is no book of ${author} in our database.`).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
+        })
         
     }) ;
 </script>

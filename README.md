@@ -15,9 +15,10 @@ author issue
 
 cursor issue . I decided to make it a list
 
-In the Stats page I had to put front end (JS) and back end in comunication in order to send the use choice and check in the DB What was the highest rated book.
-Initially I have tried to just use simple call my flask method again. This was definetely not a good idea and I finally undestood I had to make Ajax requests instead.
+In the Stats page I had to put front end (JS) and back end (Python) in comunication in order to send user choice and check in the DB what was the highest rated book.
+Initially I have tried to just call my flask method again. This was definetely not a good idea and I finally undestood I had to make Ajax requests instead.
 I solved the issue using Fetch API that allowed me to keep client and server side in comunication. In order to transfer the data I had to use JSON format and serialize/ parse methods in both languages.
+In order to deal with errors (author with no books) I have added a catch() function .
 
 ### Purpose
 
