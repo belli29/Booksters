@@ -24,11 +24,8 @@
                 </div>
             </div>
         </span>
-        <!--<form action="{{ url_for('best_book_author') }}" id="best-book" method="POST">
-            <input type="text" name="author" id="author" hidden required>
-        </form>-->
     </h1>
-    <p>The book of <span id="author-selected">(Choose Author)</span> that has the highest rating is <span id="best-book-title">(title)</span> with <span id="best-book-rating">(rating)</span>/5 score </p>
+    <p id='best-book-statement'></p>
     <hr>
 <!-- importing jquery-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -36,10 +33,9 @@
 <!-- copies the choice of user into the paragraph and find the highest rated book-->
 <script>
     $("select#book_author").change(function () {
-        author=$(this).find("option:selected").text();
-        //copies user choice
-        $("#author-selected").text(author);
-        //send a request with user choice to the server 
+        //gets user choice
+        author=$(this).find("option:selected").text();      
+        //sends a request with user choice to the server 
         fetch('/best_book_author/', {
             method: 'POST',
             // JSON payload
@@ -54,12 +50,12 @@
         //collects server response
         }).then(function (response) { 
             return response.text();
-        //parse server response and amenes DOM accordigly 
+        //parse server response and amends DOM accordigly 
         }).then(function (text) {
             let bestBookObject= JSON.parse(text);
-            $("#best-book-title").text(bestBookObject.book_title);
-            $("#best-book-rating").text(bestBookObject.book_rating);
+            $("#best-book-statement").text(`The book of ${author} that was rated highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5`);
         });
+        
     }) ;
 </script>
 {% endblock %}
