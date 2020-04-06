@@ -140,7 +140,8 @@ def stats():
     return render_template('stats.html', 
                             top_rated = top_rated, 
                             top_voted= top_voted,
-                            authors= mongo.db.authors.find())
+                            authors= mongo.db.authors.find(),
+                            genres= mongo.db.genres.find())
 
 # renders add_book.html
 @app.route('/add_book')
@@ -204,19 +205,40 @@ def update_rating(book_title):
 # identify the best rated book of author selected by user and return data (JSON format) to client side 
 @app.route('/best_book_author/', methods=['POST'])
 def best_book_author():
-    # POST request
     author=request.get_json()["author"].lower()
     best_book_list=[]
     books_author = list(mongo.db.books.find({"book_author": author}))
-    for book in books_author:
-        mean_rating=round(mean (book["book_rating"]),1)
-        best_book_list.append({
-            "book_title":book["book_title"].title(), 
-            "book_rating":mean_rating,
-            })
-    best_book = max(best_book_list, key = lambda x: x["book_rating"])
-    best_book_json = json.dumps(best_book)
-    return best_book_json 
+    if books_author:
+        for book in books_author:
+            mean_rating=round(mean (book["book_rating"]),1)
+            best_book_list.append({
+                "book_title":book["book_title"].title(), 
+                "book_rating":mean_rating,
+                })
+        best_book = max(best_book_list, key = lambda x: x["book_rating"])
+        best_book_json = json.dumps(best_book)
+        return best_book_json 
+    else:
+        return "no book found", 500
+
+# identify the best rated book of genre selected by user and return data (JSON format) to client side 
+@app.route('/best_book_genre/', methods=['POST'])
+def best_book_genre():
+    genre=request.get_json()["genre"].lower()
+    best_book_list=[]
+    books_genre = list(mongo.db.books.find({"book_genre": genre}))
+    if books_genre:
+        for book in books_genre:
+            mean_rating=round(mean (book["book_rating"]),1)
+            best_book_list.append({
+                "book_title":book["book_title"].title(), 
+                "book_rating":mean_rating,
+                })
+        best_book = max(best_book_list, key = lambda x: x["book_rating"])
+        best_book_json = json.dumps(best_book)
+        return best_book_json 
+    else:
+        return "no book found", 500
    
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),

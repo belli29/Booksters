@@ -20,6 +20,8 @@ Initially I have tried to just call my flask method again. This was definetely n
 I solved the issue using Fetch API that allowed me to keep client and server side in comunication. In order to transfer the data I had to use JSON format and serialize/ parse methods in both languages.
 In order to deal with errors (author with no books) I have added a catch() function .
 
+I have notice a lot of code was getting repeated in my app.py . In order to achieve a DRY code, I have decided to make us of few helper functions
+
 ### Purpose
 
 

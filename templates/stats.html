@@ -3,36 +3,52 @@
     <h1>Stats</h1>
 {% endblock%}
 {% block content %}
-    <h1 class="text-center">What is the most voted book? </h1>
-    <p>The book that was votes mosted times is {{ top_voted.book_title.title() }} by {{ top_voted.book_author.title()  }}. Users have rated it {{ top_voted.book_votes }} times.</p>
-    <hr>
-    <h1  class="text-center">What is the book that people rated the highest? </h1>
-    <p>The book that has the highest rating is {{ top_rated.book_title.title() }} by {{ top_rated.book_author.title() }} with {{ top_rated.book_rating }}/5 score </p>
-    <hr>
-    <h1  class="text-center">
-        <span class="d-inline">What is the highest rated book of </span>
-        <span class="d-inline">
-            <div class="control-group">
-                <div class="form-group col-xs-1 floating-label-form-group controls">
-                    <label>Choose an author</label>
-                        <select  class="custom-select" id="book_author" name="book_author" required>
-                            <option value="" disabled selected>Choose Author</option>
-                            {% for auth in authors %}
-                                <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
-                            {% endfor %}
-                        </select>
-                </div>
-            </div>
-        </span>
-    </h1>
-    <p id='best-book-statement'></p>
-    <hr>
-<!-- importing jquery-->
+    <div class="row">
+        <div class= "col-md-6 border p-5 stats-item">
+            <h1 class="text-center">What is the most voted book? </h1>
+            <p>The book that was voted most times is {{ top_voted.book_title.title() }} by {{ top_voted.book_author.title()  }}. Users have rated it {{ top_voted.book_votes }} times.</p>
+        </div>
+        <div class= "col-md-6 border p-5 stats-item">
+            <h1  class="text-center">What is the book that people rated the highest? </h1>
+            <p>The book that has the highest rating is {{ top_rated.book_title.title() }} by {{ top_rated.book_author.title() }} with {{ top_rated.book_rating }}/5 overall score </p>
+        </div>
+        <div class= "col-md-6 border p-5 stats-item">
+            <h1  class="text-center">
+                <span class="d-inline">What is the highest rated book of </span>
+                <span class="d-inline">
+                    <select  class="custom-select stats-select" id="author_select" name="book_author">
+                        <option value="" disabled selected>Choose Author</option>
+                        {% for auth in authors %}
+                            <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
+                        {% endfor %}
+                    </select>                
+                </span>
+                <span class="d-inline">?</span>
+            </h1>
+            <p id='best-book-statement'></p>
+        </div>
+        <div class= "col-md-6 border p-5 stats-item">
+            <h1  class="text-center">
+                <span class="d-inline">What is the highest rated book of genre </span>
+                <span class="d-inline">
+                    <select  class="custom-select stats-select" id="genre_select" name="book_genre">
+                        <option value="" disabled selected>Choose Genre</option>
+                        {% for gen in genres %}
+                            <option value="{{gen.genre_name}}">{{gen.genre_name.title()}}</option>
+                        {% endfor %}
+                    </select>                
+                </span>
+                <span class="d-inline">?</span>
+            </h1>
+            <p id='best-genre-statement'></p>
+        </div>
+    </div>
+<!-- imports jquery-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 <!-- copies the choice of user into the paragraph and find the highest rated book-->
 <script>
-    $("select#book_author").change(function () {
+    $("select#author_select").change(function () {
         //gets user choice
         author=$(this).find("option:selected").text();      
         //sends a request with user choice to the server 
@@ -53,9 +69,36 @@
         //parse server response and amends DOM accordigly 
         }).then(function (text) {
             let bestBookObject= JSON.parse(text);
-            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5`);
+            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5 overall score`);
         }).catch(function () {
-            $("#best-book-statement").text(`There is no book of ${author} in our database.`).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
+            $("#best-book-statement").text(`There is no book of ${author} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
+        })
+        
+    }) ;
+    $("select#genre_select").change(function () {
+        //gets user choice
+        genre=$(this).find("option:selected").text();      
+        //sends a request with user choice to the server 
+        fetch('/best_book_genre/', {
+            method: 'POST',
+            // JSON payload
+            body: JSON.stringify({
+                "genre": genre
+            }),
+            headers: new Headers({
+                "content-type": "application/json"
+            }),
+            cache: "no-cache",
+            credentials: "include"
+        //collects server response
+        }).then(function (response) { 
+            return response.text();
+        //parse server response and amends DOM accordigly 
+        }).then(function (text) {
+            let bestBookObject= JSON.parse(text);
+            $("#best-genre-statement").text(`The book of ${genre.toLowerCase()} that was rated the highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5 overall score`);
+        }).catch(function () {
+            $("#best-genre-statement").text(`There is no book of ${genre} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
         })
         
     }) ;

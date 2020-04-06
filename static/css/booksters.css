@@ -1,8 +1,8 @@
-.book_item {
+.book-item {
     padding: 10px;
     text-align: center;
 }
-.book_item:hover {
+.book-item:hover {
       transform: scale(1.01);
 }
 
@@ -33,4 +33,16 @@
 
 .flashes{
     font-weight: 500;
+}
+
+.stats-select{
+    width: 9rem;
+    font-size: .7rem;
+    font-weight: 800;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+}
+
+.stats-item:hover {
+      transform: scale(1.01);
 }
