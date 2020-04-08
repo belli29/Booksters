@@ -22,7 +22,7 @@ mongo = PyMongo(app)
 def star_rating(book):
     rating=(book['book_rating'])
     if rating==[]:
-        book['star_rating']='✩✩✩✩✩'
+        star_rating='✩✩✩✩✩'
     else:
         mean_rating=mean(rating)
         star_rating=""
@@ -33,19 +33,35 @@ def star_rating(book):
             else:
                 star_rating += '★'
             count += 1 
-        book['star_rating'] = star_rating
+    return star_rating
 
 # Add the attribute book_short_description
 def short_description(book):
-    book['book_short_description'] = book['book_description'].split('.')[0] + '.'
+    book_short_description = book['book_description'].split('.')[0] + '.'
+    return book_short_description
 
 # Turns the cursor object into a string
 def cursor_to_list(cursor_books):
     books=list(cursor_books)
     for book in books:
-        star_rating(book)
-        short_description(book)    
+        book['star_rating']=star_rating(book)
+        book['book_short_description']=short_description(book)    
     return books
+
+# returns a list of the 10 most rated books
+def best_ten_books():
+    best_book_list=[]
+    books = list(mongo.db.books.find())
+    for book in books:
+        mean_rating=round(mean (book["book_rating"]),1)
+        best_book_list.append({
+            "book_title":book["book_title"], 
+            "book_author":book["book_author"],
+            "book_rating":mean_rating,
+            "book_stars":star_rating(book)
+            })
+    best_books = sorted(best_book_list, key = lambda x: x["book_rating"], reverse = True)[:10]
+    return best_books
 
 # updates book ratings
 @app.route('/insert_rating/<book_id>', methods=["POST"])
@@ -73,7 +89,7 @@ def get_books():
 @app.route('/<book_author>/<book_title>')
 def get_book(book_author, book_title):
     book = mongo.db.books.find_one({"book_title":book_title, "book_author":book_author})
-    star_rating(book)
+    book["star_rating"]=star_rating(book)
     list_by_author = list(mongo.db.books.find({"book_author":book_author}))
     if len(list_by_author) > 1:
         return render_template('book.html', book=book, author_list=True)
@@ -141,8 +157,8 @@ def stats():
                             top_rated = top_rated, 
                             top_voted= top_voted,
                             authors= mongo.db.authors.find(),
-                            genres= mongo.db.genres.find())
-
+                            genres= mongo.db.genres.find(),
+                            best_ten_books= best_ten_books())
 # renders add_book.html
 @app.route('/add_book')
 def add_book():
@@ -239,7 +255,7 @@ def best_book_genre():
         return best_book_json 
     else:
         return "no book found", 500
-   
+    
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),
             port = int(os.environ.get('PORT')),

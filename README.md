@@ -22,6 +22,8 @@ In order to deal with errors (author with no books) I have added a catch() funct
 
 I have notice a lot of code was getting repeated in my app.py . In order to achieve a DRY code, I have decided to make us of few helper functions
 
+For the stats page I have considered different approaches. Insitially I was usign Js only . Then I ahve used dc with corssfilter in order to render everything with charts.
+I then decided that it was was not really a good choiche for a project about books. I fanlly decided for a mixed approach with only limited use of charts
 ### Purpose
 
 

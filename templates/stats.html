@@ -3,6 +3,26 @@
     <h1>Stats</h1>
 {% endblock%}
 {% block content %}
+    <!-- renders the 10 top rated books list-->
+    <div class="row">
+        <div class= "col-md-12 border stats-item">
+            <h1  class="text-center">Our top rated books</h1>
+            <ol>
+            {% for book in best_ten_books %}
+                <li><a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>{{book.book_stars}}</li>
+            {% endfor %}
+            </ol>      
+            
+        </div>
+    </div>
+    <!-- renders the book rating chart -->
+    <div class="row">
+        <div class= "col-md-12 border stats-item">
+            <h1  class="text-center">rating evolution for this book</h1>      
+            <p id='rating-chart'></p>
+        </div>
+    </div>
+    <!-- renders 4 info boxes -->
     <div class="row">
         <div class= "col-md-6 border p-5 stats-item">
             <h1 class="text-center">What is the most voted book? </h1>
@@ -43,6 +63,7 @@
             <p id='best-genre-statement'></p>
         </div>
     </div>
+    
 <!-- imports jquery-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
@@ -102,6 +123,43 @@
         })
         
     }) ;
+</script>
+<!-- libraries needed to create and render the chart-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.min.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
+<!-- this script registers the book choice and renders the rating in a chart-->
+<script>
+     var transactionsData = [
+            {"name": "book1", "store": "Acme", "state": "NY", "spend": 1},
+            {"name": "book2", "store": "Big Co.", "state": "NY", "spend": 2},
+            {"name": "book3", "store": "Acme", "state": "FL", "spend": 3},
+            {"name": "book4", "store": "Acme", "state": "NY", "spend": 5},
+            {"name": "book5", "store": "Big Co.", "state": "FL", "spend": 5},
+            {"name": "book6", "store": "Big Co.", "state": "NY", "spend": 4},
+            {"name": "book7", "store": "Acme", "state": "FL", "spend": 3},
+            {"name": "book8", "store": "Big Co.", "state": "NY", "spend": 2},
+        ];
+    var ndx = crossfilter(transactionsData);
+
+    var book_name_dim = ndx.dimension(dc.pluck('name'));
+    var rating = book_name_dim.group().reduceSum(dc.pluck('spend'));
+
+    dc.barChart('#rating-chart')
+        .width(800)
+        .height(500)
+        .margins({top: 10, right: 50, bottom: 30, left: 50})
+        .dimension(book_name_dim)
+        .group(rating)
+        .transitionDuration(500)
+        .x(d3.scale.ordinal())
+        .xUnits(dc.units.ordinal)
+        .xAxisLabel("Book")
+        .yAxis().ticks(4);
+        
+    dc.renderAll();
+
 </script>
 {% endblock %}
 
