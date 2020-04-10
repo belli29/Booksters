@@ -3,6 +3,7 @@ from flask import Flask, url_for, render_template, redirect, request, flash, jso
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from statistics import mean
+from datetime import date
 import array
 from os import path
 if path.exists("env.py"):
@@ -20,7 +21,7 @@ mongo = PyMongo(app)
 
 # Creates a visual 5 stars scale from array of ratings
 def star_rating(book):
-    rating=(book['book_rating'])
+    rating=[rating_list[0] for rating_list in book['book_rating']]
     if rating==[]:
         star_rating='✩✩✩✩✩'
     else:
@@ -68,12 +69,17 @@ def best_ten_books():
 def insert_rating(book_id):
     books = mongo.db.books
     book=books.find_one({"_id":ObjectId(book_id)})
+    #new rating
     new_rating= int(request.form.get('rating'))
+    rating_date= date.today().strftime("%d-%b-%Y")
+    new_rating_list= [new_rating,rating_date]
+    # adds new rating to the rating list
     book_rating=list(book['book_rating'])
-    new_list = book_rating.append(new_rating)
+    book_rating.append(new_rating_list)
+    # udpates mongoDB
     books.update_one( {'_id': ObjectId(book_id)},
                       {'$set': {
-                                "book_rating":book_rating
+                                "book_rating": book_rating
                                }})
     return redirect(url_for("get_book", book_author=book['book_author'], book_title =book['book_title']))
 
@@ -237,7 +243,7 @@ def best_book_author():
     else:
         return "no book found", 500
 
-# identify the best rated book of genre selected by user and return data (JSON format) to client side 
+# identifies the best rated book of genre selected by user and return data (JSON format) to client side 
 @app.route('/best_book_genre/', methods=['POST'])
 def best_book_genre():
     genre=request.get_json()["genre"].lower()
@@ -255,7 +261,17 @@ def best_book_genre():
         return best_book_json 
     else:
         return "no book found", 500
-    
+
+# identifies rating of the book selected by user and return data (JSON format) to client side 
+@app.route('/selected_book_rating/', methods=['POST'])
+def selected_book_rating():
+    book=request.get_json()["book"].lower()
+    book_selected =list(mongo.db.books.find({"book_title": book}))[0]
+    book_selected_rating= book_selected['book_rating']
+    book_selected_rating_json= json.dumps(book_selected_rating)
+    print(book_selected_rating_json)
+    return book_selected_rating_json 
+     
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),
             port = int(os.environ.get('PORT')),

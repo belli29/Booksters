@@ -5,11 +5,16 @@
 {% block content %}
     <!-- renders the 10 top rated books list-->
     <div class="row">
-        <div class= "col-md-12 border stats-item">
+        <div id="top-ten-books" class= "col-md-12 border stats-item">
             <h1  class="text-center">Our top rated books</h1>
             <ol>
             {% for book in best_ten_books %}
-                <li><a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>{{book.book_stars}}</li>
+                <li>
+                    <p>
+                        <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>
+                        <span> {{book.book_stars}}</span>
+                    </p>
+                </li>
             {% endfor %}
             </ol>      
             
@@ -18,8 +23,9 @@
     <!-- renders the book rating chart -->
     <div class="row">
         <div class= "col-md-12 border stats-item">
-            <h1  class="text-center">rating evolution for this book</h1>      
-            <p id='rating-chart'></p>
+            <h1  id="chart-title" class="text-center">Rating Chart</h1>      
+            <div id='rating-chart'></div>
+            
         </div>
     </div>
     <!-- renders 4 info boxes -->
@@ -131,7 +137,44 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
 <!-- this script registers the book choice and renders the rating in a chart-->
 <script>
-     var transactionsData = [
+    //gets the name of the book when mouse is over
+    $("#top-ten-books").find("a").hover(function () {
+        book=$(this).text();  
+        $("#chart-title").text(`Rating evolution of ${book}`);
+        //sends a request with user selcection to the server 
+        fetch('/selected_book_rating/', {
+            method: 'POST',
+            // JSON payload
+            body: JSON.stringify({
+                "book": book
+            }),
+            headers: new Headers({
+                "content-type": "application/json"
+            }),
+            cache: "no-cache",
+            credentials: "include"
+        //collects server response
+        }).then(function (response) { 
+            return response.text();
+        //parses server response and creates a chart based on it 
+        }).then(function (text) {
+            let rating = [1,2,5,7];
+            dc.barChart('#rating-chart')
+                .width(800)
+                .height(500)
+                .margins({top: 10, right: 50, bottom: 30, left: 50})
+                .dimension(rating)
+                .transitionDuration(500)
+                .x(d3.scale.ordinal())
+                .xUnits(dc.units.ordinal)
+                .xAxisLabel("Book")
+                .yAxis().ticks(4);
+        
+            dc.renderAll()
+        });
+        
+  
+    var transactionsData = [
             {"name": "book1", "store": "Acme", "state": "NY", "spend": 1},
             {"name": "book2", "store": "Big Co.", "state": "NY", "spend": 2},
             {"name": "book3", "store": "Acme", "state": "FL", "spend": 3},
@@ -146,20 +189,20 @@
     var book_name_dim = ndx.dimension(dc.pluck('name'));
     var rating = book_name_dim.group().reduceSum(dc.pluck('spend'));
 
-    dc.barChart('#rating-chart')
-        .width(800)
-        .height(500)
-        .margins({top: 10, right: 50, bottom: 30, left: 50})
-        .dimension(book_name_dim)
-        .group(rating)
-        .transitionDuration(500)
-        .x(d3.scale.ordinal())
-        .xUnits(dc.units.ordinal)
-        .xAxisLabel("Book")
-        .yAxis().ticks(4);
+    //dc.barChart('#rating-chart')
+      // .width(800)
+        //.height(500)
+        //.margins({top: 10, right: 50, bottom: 30, left: 50})
+        //.dimension(book_name_dim)
+        //.group(rating)
+        //.transitionDuration(500)
+        //.x(d3.scale.ordinal())
+        //.xUnits(dc.units.ordinal)
+        //.xAxisLabel("Book")
+        //.yAxis().ticks(4);
         
     dc.renderAll();
-
+});
 </script>
 {% endblock %}
 
