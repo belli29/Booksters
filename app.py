@@ -54,7 +54,7 @@ def best_ten_books():
     best_book_list=[]
     books = list(mongo.db.books.find())
     for book in books:
-        mean_rating=round(mean (book["book_rating"]),1)
+        mean_rating=round(mean([rating_list[0] for rating_list in book['book_rating']]),1)
         best_book_list.append({
             "book_title":book["book_title"], 
             "book_author":book["book_author"],
@@ -149,7 +149,7 @@ def stats():
     books=list(mongo.db.books.find())
     book_list=[]
     for book in books:
-        mean_rating=round(mean (book["book_rating"]),1)
+        mean_rating=round(mean ([rating_list[0] for rating_list in book['book_rating']]),1)
         votes=len(book["book_rating"])
         book_list.append({
                         "book_title":book["book_title"], 
@@ -232,7 +232,8 @@ def best_book_author():
     books_author = list(mongo.db.books.find({"book_author": author}))
     if books_author:
         for book in books_author:
-            mean_rating=round(mean (book["book_rating"]),1)
+            ratings = [rating[0] for rating in book['book_rating']]
+            mean_rating=round(mean (ratings),1)
             best_book_list.append({
                 "book_title":book["book_title"].title(), 
                 "book_rating":mean_rating,
@@ -251,7 +252,8 @@ def best_book_genre():
     books_genre = list(mongo.db.books.find({"book_genre": genre}))
     if books_genre:
         for book in books_genre:
-            mean_rating=round(mean (book["book_rating"]),1)
+            ratings = [rating[0] for rating in book['book_rating']]
+            mean_rating=round(mean (ratings),1)
             best_book_list.append({
                 "book_title":book["book_title"].title(), 
                 "book_rating":mean_rating,
@@ -266,10 +268,16 @@ def best_book_genre():
 @app.route('/selected_book_rating/', methods=['POST'])
 def selected_book_rating():
     book=request.get_json()["book"].lower()
-    book_selected =list(mongo.db.books.find({"book_title": book}))[0]
-    book_selected_rating= book_selected['book_rating']
-    book_selected_rating_json= json.dumps(book_selected_rating)
-    print(book_selected_rating_json)
+    book_selected =list(mongo.db.books.find({"book_title": book}))
+    book_selected_rating= [rating_list for rating_list in book_selected[0]['book_rating']]
+    book_selected_rating_dict=[]
+    for rating in book_selected_rating:
+        book_selected_rating_dict.append(
+            {"rating" : rating[0],
+             "rating_date" : rating[1][3:] # gets only month and year of the rating dates
+            }
+        )
+    book_selected_rating_json = json.dumps(book_selected_rating_dict)
     return book_selected_rating_json 
      
 if __name__ == '__main__':
