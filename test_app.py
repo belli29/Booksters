@@ -68,7 +68,7 @@ class TestApp(unittest.TestCase):
     def test_notfound_get_book(self):
         book_not_found_name="qWertY29"
         book_url=f"/book_not_found/{book_not_found_name}"
-        book_string= f"We couldn't find {book_not_found_name}"
+        book_string= f"We couldn't find {book_not_found_name.title()}"
         response=self.server_response(book_url)
         self.assertIn(bytes(book_string, 'utf-8'), response.data)
     
@@ -89,16 +89,16 @@ class TestApp(unittest.TestCase):
         author_found_name="charles dickens" 
         book_url=f"/{author_found_name}/{book_found_name}"
         response=self.server_response(book_url)
-        self.assertIn(b'We have more books of this author. Check them out!', response.data)
+        self.assertIn(b'We have more books of this author.', response.data)
     
     # tests average rating calculation and number of stars displayed
     def test_star_rating(self): 
         self.local_test_book= self.test_book
-        self.local_test_book['book_rating'] = [4,2]
+        self.local_test_book['book_rating'] = [[4,"10-Apr-2020"],[2,"11-Apr-2020"]]
         TestApp.insert_test_book(self, self.local_test_book) 
         response=self.server_response(self.test_book_url)
         try:
-            self.assertIn('✭✭✭✩✩'.encode(), response.data)
+            self.assertIn('★★★☆☆'.encode(), response.data)
         finally:
             TestApp.remove_test_book(self, self.local_test_book)
 
@@ -111,6 +111,18 @@ class TestApp(unittest.TestCase):
             self.assertNotIn(b" And, then, goes on.", response.data)
         finally:
             TestApp.remove_test_book(self, self.test_book)
-
+    
+    # tests if the highest rated book is actually displayed in STATS page
+    def test_top_rated_book(self): 
+        self.local_test_book= self.test_book
+        self.local_test_book['book_rating'] = [[6,"10-Apr-2020"]]
+        TestApp.insert_test_book(self, self.local_test_book) 
+        response=self.server_response("/stats")
+        top_rated_p=f"The book that has the highest rating is {self.local_test_book['book_title'].title()} by {self.local_test_book['book_author'].title()} with 6/5 overall score"
+        try:
+            self.assertIn(top_rated_p.encode(), response.data)
+        finally:
+            TestApp.remove_test_book(self, self.local_test_book)
+    
 if __name__ == '__main__':
     unittest.main()

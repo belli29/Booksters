@@ -13,7 +13,7 @@
                     <p class= "best-book">
                         <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>
                         <span> {{book.book_stars}}</span>
-                        <div id="rating-chart-{{book.book_title.replace(' ','-')}}"></div>
+                        <div class="chart" id="rating-chart-{{book.book_title.replace(' ','-')}}"></div>
                     </p>
                 </li>
             {% endfor %}
@@ -171,11 +171,8 @@
                 
                 dc.renderAll();  
         });
-    $("#top-ten-books").find("a").mouseout(function () {
-        book=$(this).text();
-        var span = book.replace(/ /g,"-");
-        var spanLow = span.toLowerCase();
-        $(`#rating-chart-${spanLow}`).addClass("d-none")
+    $(".chart").mouseleave(function () {
+        $(".chart").addClass("d-none")
         });
 
     
