@@ -112,6 +112,8 @@ class TestApp(unittest.TestCase):
         finally:
             TestApp.remove_test_book(self, self.test_book)
     
+    #### STATS page tests  ####
+
     # tests if the highest rated book is actually displayed in STATS page
     def test_top_rated_book(self): 
         self.local_test_book= self.test_book
@@ -124,5 +126,21 @@ class TestApp(unittest.TestCase):
         finally:
             TestApp.remove_test_book(self, self.local_test_book)
     
+    # tests if the most voted book is actually displayed in STATS page
+    def test_top_rated_book(self): 
+        all_books=TestApp.books.find()
+        most_voted_book_rating_list = (max(all_books, key = lambda x: len(x["book_rating"])))['book_rating'] # finds the most voted book rating
+        most_voted_book_rating_list.append([1,"22-Apr-2020"]) # adds to the rating list a fake extra vote
+        most_voted_book_rating_list_plus_one = most_voted_book_rating_list 
+        self.local_test_book= self.test_book
+        self.local_test_book['book_rating'] = most_voted_book_rating_list_plus_one # creates a book with 1+ vote than the most voted book in DB
+        TestApp.insert_test_book(self, self.local_test_book) 
+        response=self.server_response("/stats")
+        most_voted_p=f"The book that was voted most times is {self.local_test_book['book_title'].title()} by {self.local_test_book['book_author'].title()}."
+        try:
+            self.assertIn(most_voted_p.encode(), response.data)
+        finally:
+            TestApp.remove_test_book(self, self.local_test_book)
+
 if __name__ == '__main__':
     unittest.main()

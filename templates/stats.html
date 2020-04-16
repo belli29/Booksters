@@ -11,7 +11,7 @@
             {% for book in best_ten_books %}
                 <li class="text-center col-md-4 mx-auto">
                     <p class= "best-book">
-                        <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>
+                        <a class="test" href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>
                         <span> {{book.book_stars}}</span>
                         <div class="chart" id="rating-chart-{{book.book_title.replace(' ','-')}}"></div>
                     </p>
@@ -131,7 +131,7 @@
 <!-- this script registers the book choice and renders the rating in a chart-->
 <script>
     //gets the name of the book when mouse is over
-    $("#top-ten-books").find("a").mouseenter(function () {
+    $(".test").mouseenter(function () {
         book=$(this).text();
         //sends a request with user selection to the server 
         fetch('/selected_book_rating/', {
@@ -171,7 +171,7 @@
                 
                 dc.renderAll();  
         });
-    $(".chart").mouseleave(function () {
+    $(".test").mouseleave(function () {
         $(".chart").addClass("d-none")
         });
 
