@@ -195,7 +195,21 @@ def insert_book():
     else:
         flash(f"{new_book['book_title'].title()} by {new_book['book_author'].title()} already exists in the database!")
     return redirect(url_for("get_books"))
+# directs to the delete page
+@app.route('/delete_book_sure/<book_id>')
+def delete_book_sure(book_id):
+    books=mongo.db.books
+    book=books.find_one({"_id":ObjectId(book_id)})
+    return render_template('delete.html', book=book)
 
+# deletes the book selected from DB
+@app.route('/delete/<book_id>')
+def delete(book_id):
+    books=mongo.db.books
+    book = books.find ({"_id":ObjectId(book_id)})
+    books.remove({"_id":ObjectId(book_id)})
+    flash("The book is now deleted from our database")
+    return redirect(url_for("get_books"))
 @app.route('/insert_genre', methods=["POST"])
 def insert_genre():
     genres=mongo.db.genres

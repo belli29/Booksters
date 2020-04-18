@@ -21,6 +21,13 @@
         <div class="row">
             <div class="col-md-10 mx-auto">
             {{book.book_description}}
+            <p>
+                <form action="{{ url_for('delete_book_sure', book_id = book._id) }}">
+                    <div class="control-group">
+                        <button type="submit" class="btn btn-primary" >Delete book</button>
+                    </div>          
+                </form>
+            </p>
             </div> 
         </div> 
         <div class="row">
