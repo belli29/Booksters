@@ -20,22 +20,18 @@
     <div class="container">
         <div class="row">
             <div class="col-md-10 mx-auto">
-            {{book.book_description}}
-            <p>
-                <form action="{{ url_for('delete_book_sure', book_id = book._id) }}">
-                    <div class="control-group">
-                        <button type="submit" class="btn btn-primary" >Delete book</button>
-                    </div>          
-                </form>
-            </p>
+                {{book.book_description}}
+                <p>
+                    <a class="btn btn-primary d-inline" href="{{url_for('update_rating', book_title= book.book_title)}}">Rate book</a>
+                    <a class="btn btn-primary d-inline" href="{{url_for('edit_book', book_id = book._id)}}">Edit book</a> 
+                    <a class="btn btn-primary d-inline" href="{{ url_for('delete_book_sure', book_id = book._id) }}" >Delete book</a>                          
+                </p>
             </div> 
         </div> 
         <div class="row">
             <div class="col-lg-8 col-md-10 mx-auto text-center">
                 <p>
-                    <a href="{{url_for('update_rating', book_title= book.book_title)}}">
-                        <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
-                    </a>
+                    <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
                     <div class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</div> 
                     
                 </p>

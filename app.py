@@ -180,7 +180,7 @@ def add_genre():
 def add_author():
     return render_template('add_author.html')
 
-# updates DB with a new document
+# Add a new book in DB
 @app.route('/insert_book', methods=["POST"])
 def insert_book():
     books=mongo.db.books
@@ -195,6 +195,26 @@ def insert_book():
     else:
         flash(f"{new_book['book_title'].title()} by {new_book['book_author'].title()} already exists in the database!")
     return redirect(url_for("get_books"))
+
+# updates details of a book in DB 
+@app.route('/update_book/<book_id>', methods=["POST"])
+def update_book(book_id):
+    books=mongo.db.books
+    new_details=request.form.to_dict()
+    new_title=new_details["book_title"].lower()
+    new_author=new_details["book_author"].lower()
+    new_description=new_details["book_description"]
+    new_genre=new_details["book_genre"].lower()
+    books.update_one( {'_id': ObjectId(book_id)},
+                      {'$set': {
+                                "book_title": new_title,
+                                "book_author": new_author,
+                                "book_genre": new_genre,
+                                "book_description": new_description
+                               }})
+    
+    flash(" All info updated!")
+    return redirect(url_for("get_book", book_title= new_title, book_author= new_author))
 # directs to the delete page
 @app.route('/delete_book_sure/<book_id>')
 def delete_book_sure(book_id):
@@ -210,6 +230,20 @@ def delete(book_id):
     books.remove({"_id":ObjectId(book_id)})
     flash("The book is now deleted from our database")
     return redirect(url_for("get_books"))
+
+# directs to the edit page
+@app.route('/edit_book/<book_id>')
+def edit_book(book_id):
+    books=mongo.db.books
+    book_cursor=books.find({"_id":ObjectId(book_id)})
+    book=list(book_cursor)[0]
+    print(book)
+    
+    return render_template('edit_book.html', book=book 
+                                           , genres= mongo.db.genres.find()
+                                           , authors= mongo.db.authors.find()
+                                           )
+
 @app.route('/insert_genre', methods=["POST"])
 def insert_genre():
     genres=mongo.db.genres
