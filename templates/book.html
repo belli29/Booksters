@@ -7,10 +7,10 @@
                 <a id="author-book-page" href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a> 
             </h5>
             {% if author_list == True %}
-                <div class="badge badge-danger">
+                <a class="badge badge-danger" href="{{url_for('get_books_by_author', author_name=book.book_author)}}">
                     We have more books of this author.
-                    <br>Click on the author name to check them out!
-                </div>
+                    <br>Click here to check them out!
+                </a>
             {% endif %} 
         </p>
     </div>
@@ -21,11 +21,6 @@
         <div class="row">
             <div class="col-md-10 mx-auto">
                 {{book.book_description}}
-                <p>
-                    <a class="btn btn-primary d-inline" href="{{url_for('update_rating', book_title= book.book_title)}}">Rate book</a>
-                    <a class="btn btn-primary d-inline" href="{{url_for('edit_book', book_id = book._id)}}">Edit book</a> 
-                    <a class="btn btn-primary d-inline" href="{{ url_for('delete_book_sure', book_id = book._id) }}" >Delete book</a>                          
-                </p>
             </div> 
         </div> 
         <div class="row">
@@ -35,18 +30,17 @@
                     <div class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</div> 
                     
                 </p>
-            </div>
-            
+            </div>    
         </div>
-        <div class="row" >
-            <div class="col-lg-8 col-md-10 mx-auto text-center">
+        <div class="row">
+            <div class="col-md-10 mx-auto">
                 <p>
-                    <h1>
-                        <a id="buy-it" class=" badge badge-danger" href="{{'https://www.bookster.store.com/'+book.book_title}}">Buy it here!</a>
-                    </h1>
+                    <a class="btn btn-primary d-inline" href="{{url_for('update_rating', book_title= book.book_title)}}">Rate book</a>
+                    <a class="btn btn-primary d-inline" href="{{url_for('edit_book', book_id = book._id)}}">Edit book</a> 
+                    <a class="btn btn-primary d-inline" href="{{ url_for('delete_book_sure', book_id = book._id) }}" >Delete book</a> 
+                    <a class="btn btn-danger d-inline" href="{{url_for('store', book_title=book.book_title)}}">Buy it here!</a>
                 </p>
-                
-            </div>
+            </div>    
         </div>
     </div>   
 </article>

@@ -91,6 +91,11 @@ def get_books():
     books = cursor_to_list(books_cursor)
     return render_template('books.html', books=books)
 
+# gets the user to the store section
+@app.route('/store/<book_title>')
+def store(book_title):
+    return render_template('buy.html', book_title=book_title)
+
 # gets a spefic book in DB
 @app.route('/<book_author>/<book_title>')
 def get_book(book_author, book_title):

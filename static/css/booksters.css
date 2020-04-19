@@ -24,13 +24,6 @@
     color: #0085A1
 }
 
-#buy-it{
-    transform: rotate(-5deg);
-    -webkit-transform: rotate(-5deg);
-    -ms-transform: rotate(-5deg);
-    -o-transform: rotate(-5deg);
-}
-
 .flashes{
     font-weight: 500;
 }

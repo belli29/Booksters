@@ -18,9 +18,12 @@
                 <div class="form-group col-xs-12 floating-label-form-group controls">
                     <label>Choose an author</label>
                     <select  class="custom-select" id="book_author" name="book_author" required>
-                        <option value="" disabled selected>{{book.book_author.title()}}</option>
                         {% for auth in authors %}
-                            <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
+                            {% if auth.author_name== book.book_author %}
+                                <option value="{{auth.author_name}}" selected="selected">{{auth.author_name.title()}}</option>
+                            {% else %}
+                                <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
+                            {% endif %}
                         {% endfor %}
                     </select><a class="badge badge-light" href="{{url_for ('add_author')}}"><i class="fas fa-plus-circle"></i> Add Author</a>
                 </div>
@@ -29,9 +32,12 @@
                 <div class="form-group col-xs-12 floating-label-form-group controls">
                     <label>Choose a genre</label>
                     <select  class="custom-select" id="book_genre" name="book_genre" required>
-                        <option value="" disabled selected>{{book.genre_name}}</option>
                         {% for gen in genres %}
-                            <option value="{{gen.genre_name}}">{{gen.genre_name.title()}}</option>
+                            {% if gen.genre_name == book.genre_name %}
+                                <option value="{{gen.genre_name}}" selected="selected">{{gen.genre_name.title()}}</option>
+                            {% else %}
+                                <option value="{{gen.genre_name}}">{{gen.genre_name.title()}}</option>
+                            {% endif %}
                         {% endfor %}
                     </select><a class="badge badge-light" href="{{url_for ('add_genre')}}"><i class="fas fa-plus-circle"></i> Add Genre</a>
                 </div>
