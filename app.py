@@ -54,7 +54,9 @@ def best_ten_books():
     best_book_list=[]
     books = list(mongo.db.books.find())
     for book in books:
-        mean_rating=round(mean([rating_list[0] for rating_list in book['book_rating']]),1)
+        mean_rating= 0
+        if book['book_rating'] !=[]:
+            mean_rating=round(mean([rating_list[0] for rating_list in book['book_rating']]),1)
         best_book_list.append({
             "book_title":book["book_title"], 
             "book_author":book["book_author"],
@@ -154,7 +156,9 @@ def stats():
     books=list(mongo.db.books.find())
     book_list=[]
     for book in books:
-        mean_rating=round(mean ([rating_list[0] for rating_list in book['book_rating']]),1)
+        mean_rating=0
+        if book['book_rating'] != []:
+            mean_rating=round(mean ([rating_list[0] for rating_list in book['book_rating']]),1)
         votes=len(book["book_rating"])
         book_list.append({
                         "book_title":book["book_title"], 
@@ -310,15 +314,19 @@ def best_book_author():
     books_author = list(mongo.db.books.find({"book_author": author}))
     if books_author:
         for book in books_author:
-            ratings = [rating[0] for rating in book['book_rating']]
-            mean_rating=round(mean (ratings),1)
+            mean_rating= 0
+            if book['book_rating'] != []:
+                ratings = [rating[0] for rating in book['book_rating']]
+                mean_rating=round(mean (ratings),1)
             best_book_list.append({
                 "book_title":book["book_title"].title(), 
                 "book_rating":mean_rating,
                 })
-        best_book = max(best_book_list, key = lambda x: x["book_rating"])
-        best_book_json = json.dumps(best_book)
-        return best_book_json 
+        #best_book = max(best_book_list, key = lambda x: x["book_rating"])
+        #best_book_json = json.dumps(best_book)
+        author_books_sorted = sorted(best_book_list, key = lambda x: x["book_rating"], reverse = True)
+        author_books_sorted_json = json.dumps(author_books_sorted)
+        return author_books_sorted_json
     else:
         return "no book found", 500
 
@@ -330,15 +338,17 @@ def best_book_genre():
     books_genre = list(mongo.db.books.find({"book_genre": genre}))
     if books_genre:
         for book in books_genre:
-            ratings = [rating[0] for rating in book['book_rating']]
-            mean_rating=round(mean (ratings),1)
+            mean_rating= 0
+            if book['book_rating'] != []:
+                ratings = [rating[0] for rating in book['book_rating']]
+                mean_rating=round(mean (ratings),1)
             best_book_list.append({
                 "book_title":book["book_title"].title(), 
                 "book_rating":mean_rating,
                 })
-        best_book = max(best_book_list, key = lambda x: x["book_rating"])
-        best_book_json = json.dumps(best_book)
-        return best_book_json 
+        genre_books_sorted = sorted(best_book_list, key = lambda x: x["book_rating"], reverse = True)
+        genre_books_sorted_json = json.dumps(genre_books_sorted)
+        return genre_books_sorted_json
     else:
         return "no book found", 500
 

@@ -42,8 +42,7 @@
     transform: scale(1.01);
 }
 
-.best-book {
-    margin-top:200px;
-    
-    
-}
+.dc-chart g.axis.x text {
+    text-anchor: end !important;
+    transform: rotate(-40deg);
+    }

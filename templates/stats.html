@@ -1,4 +1,13 @@
 {% extends 'base.html' %}
+{% block head %}
+    <!-- Jquery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- libaries to render the chart-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.min.css" type="text/css" />
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
+{% endblock%}
 {% block header %}
     <h1>Stats</h1>
 {% endblock%}
@@ -9,11 +18,10 @@
             <h1>Our top rated books</h1>
             <ol>
             {% for book in best_ten_books %}
-                <li class="text-center col-md-4 mx-auto">
-                    <p class= "best-book">
-                        <a class="test" href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>
+                <li class="text-center col-md-6 mx-auto">
+                    <p>
+                        <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>
                         <span> {{book.book_stars}}</span>
-                        <div class="chart" id="rating-chart-{{book.book_title.replace(' ','-')}}"></div>
                     </p>
                 </li>
             {% endfor %}
@@ -46,6 +54,10 @@
                 <span class="d-inline">?</span>
             </h1>
             <p id='best-book-statement'></p>
+            <p id='chart-books-author'></p>
+            <script>
+             
+            </script>
         </div>
         <div class= "col-md-6 border p-5 stats-item">
             <h1  class="text-center">
@@ -61,13 +73,11 @@
                 <span class="d-inline">?</span>
             </h1>
             <p id='best-genre-statement'></p>
+            <p id='chart-books-genre'></p>
         </div>
     </div>
-    
-<!-- imports jquery-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- copies the choice of user into the paragraph and find the highest rated book-->
-<script>    
+<script> 
+    //the script is triggered by a change in the field GENRE
     $("select#author_select").change(function () {
         //gets user choice
         author=$(this).find("option:selected").text();      
@@ -85,16 +95,33 @@
             credentials: "include"
         //collects server response
         }).then(function (response) { 
-            return response.text();
+            return response.json();
         //parse server response and amends DOM accordigly 
-        }).then(function (text) {
-            let bestBookObject= JSON.parse(text);
-            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5 overall score`);
+        }).then(function (json) {
+            $('#chart-books-author').removeClass("d-none");
+            let author_books= json;
+            var ndx = crossfilter(author_books);
+            var title_dim = ndx.dimension(dc.pluck('book_title'));
+            var averageRating = title_dim.group().reduceSum(dc.pluck('book_rating'));
+            dc.barChart('#chart-books-author')
+                    .width(300)
+                    .height(150)
+                    .margins({top: 10, right: 50, bottom: 100, left: 50})
+                    .dimension(title_dim)
+                    .group(averageRating)
+                    .transitionDuration(500)
+                    .x(d3.scale.ordinal())
+                    .xUnits(dc.units.ordinal)
+                    .yAxis().ticks(4);
+            dc.renderAll();
+            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${author_books[0].book_title} with ${author_books[0].book_rating}/5 overall score`);
         }).catch(function () {
-            $("#best-book-statement").text(`There is no book of ${author.replace(" ", "-")} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
+            $("#chart-books-author").addClass("d-none")
+            $("#best-book-statement").text(`There is no book of ${author} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
         })
         
     }) ;
+    //the script is triggered by a change in the field GENRE
     $("select#genre_select").change(function () {
         //gets user choice
         genre=$(this).find("option:selected").text();      
@@ -112,72 +139,34 @@
             credentials: "include"
         //collects server response
         }).then(function (response) { 
-            return response.text();
+            return response.json();
         //parse server response and amends DOM accordigly 
-        }).then(function (text) {
-            let bestBookObject= JSON.parse(text);
-            $("#best-genre-statement").text(`The book of ${genre.toLowerCase()} that was rated the highest by our comunity is ${bestBookObject.book_title} with ${bestBookObject.book_rating}/5 overall score`);
+        }).then(function (json) {
+            $('#chart-books-genre').removeClass("d-none");
+            let genre_books= json;
+            var ndx = crossfilter(genre_books);
+            var title_dim = ndx.dimension(dc.pluck('book_title'));
+            var averageRating = title_dim.group().reduceSum(dc.pluck('book_rating'));
+            dc.barChart('#chart-books-genre')
+                    .width(300)
+                    .height(150)
+                    .margins({top: 10, right: 50, bottom: 100, left: 50})
+                    .dimension(title_dim)
+                    .group(averageRating)
+                    .transitionDuration(500)
+                    .x(d3.scale.ordinal())
+                    .xUnits(dc.units.ordinal)
+                    .yAxis().ticks(4);
+            dc.renderAll();
+            $("#best-genre-statement").text(`The book of ${genre} that was rated the highest by our comunity is ${genre_books[0].book_title} with ${genre_books[0].book_rating}/5 overall score`);
         }).catch(function () {
+            $("#chart-books-genre").addClass("d-none")
             $("#best-genre-statement").text(`There is no book of ${genre} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
         })
         
     }) ;
 </script>
-<!-- libraries needed to create and render the chart-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.min.css" type="text/css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
-<!-- this script registers the book choice and renders the rating in a chart-->
-<script>
-    //gets the name of the book when mouse is over
-    $(".test").mouseenter(function () {
-        book=$(this).text();
-        //sends a request with user selection to the server 
-        fetch('/selected_book_rating/', {
-            method: 'POST',
-            // JSON payload
-            body: JSON.stringify({
-                "book": book
-            }),
-            headers: new Headers({
-                "content-type": "application/json"
-            }),
-            cache: "no-cache",
-            credentials: "include"
-        //collects server response
-        }).then(function (response) { 
-            return response.json();
-        //parses server response and creates a chart based on it 
-        }).then(function (json) {
-            var ratingData = json;
-            var ndx = crossfilter(ratingData);
-            var monthDim = ndx.dimension(dc.pluck('rating_date'));
-            var monthVotesNumber = monthDim.group().reduceCount(dc.pluck('rating'));
-            var span = book.replace(/ /g,"-"); // replaces all occurencies of ' ' to '-'
-            var spanLow = span.toLowerCase();
-            $(`#rating-chart-${spanLow}`).removeClass("d-none");
-            dc.barChart(`#rating-chart-${spanLow}`)
-                .width(400)
-                .height(150)
-                .yAxisLabel("nº of votes")
-                .margins({top: 20, right: 50, bottom: 50, left: 70})
-                .dimension(monthDim)
-                .group(monthVotesNumber)
-                .transitionDuration(600)
-                .x(d3.scale.ordinal())
-                .xUnits(dc.units.ordinal)
-                .yAxis().ticks(4).tickFormat(d3.format("d"));
-                
-                dc.renderAll();  
-        });
-    $(".test").mouseleave(function () {
-        $(".chart").addClass("d-none")
-        });
 
-    
-});
-</script>
 {% endblock %}
 
 
