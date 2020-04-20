@@ -306,49 +306,29 @@ def update_rating(book_title):
     return render_template('update_rating.html', 
                             book = book)
 
-# identify the best rated book of author selected by user and return data (JSON format) to client side 
-@app.route('/best_book_author/', methods=['POST'])
-def best_book_author():
-    author=request.get_json()["author"].lower()
-    best_book_list=[]
-    books_author = list(mongo.db.books.find({"book_author": author}))
-    if books_author:
-        for book in books_author:
+# sorts books by rating, based on user choice of AUTHOR or GENRE, and returns JSON object to client side 
+@app.route('/best_books/', methods=['POST'])
+def best_books():
+    choice_str=request.get_json()["choice"].lower()
+    cat_str=request.get_json()["cat"].lower()
+    book_list=[]
+    field = "book_author"
+    if cat_str == "genre":
+        field= "book_genre"
+    books_by_choice = list(mongo.db.books.find({field: choice_str}))
+    if books_by_choice:
+        for book in books_by_choice:
             mean_rating= 0
             if book['book_rating'] != []:
                 ratings = [rating[0] for rating in book['book_rating']]
                 mean_rating=round(mean (ratings),1)
-            best_book_list.append({
+            book_list.append({
                 "book_title":book["book_title"].title(), 
                 "book_rating":mean_rating,
                 })
-        #best_book = max(best_book_list, key = lambda x: x["book_rating"])
-        #best_book_json = json.dumps(best_book)
-        author_books_sorted = sorted(best_book_list, key = lambda x: x["book_rating"], reverse = True)
-        author_books_sorted_json = json.dumps(author_books_sorted)
-        return author_books_sorted_json
-    else:
-        return "no book found", 500
-
-# identifies the best rated book of genre selected by user and return data (JSON format) to client side 
-@app.route('/best_book_genre/', methods=['POST'])
-def best_book_genre():
-    genre=request.get_json()["genre"].lower()
-    best_book_list=[]
-    books_genre = list(mongo.db.books.find({"book_genre": genre}))
-    if books_genre:
-        for book in books_genre:
-            mean_rating= 0
-            if book['book_rating'] != []:
-                ratings = [rating[0] for rating in book['book_rating']]
-                mean_rating=round(mean (ratings),1)
-            best_book_list.append({
-                "book_title":book["book_title"].title(), 
-                "book_rating":mean_rating,
-                })
-        genre_books_sorted = sorted(best_book_list, key = lambda x: x["book_rating"], reverse = True)
-        genre_books_sorted_json = json.dumps(genre_books_sorted)
-        return genre_books_sorted_json
+        books_sorted = sorted(book_list, key = lambda x: x["book_rating"], reverse = True)
+        books_sorted_json = json.dumps(books_sorted)
+        return books_sorted_json
     else:
         return "no book found", 500
 

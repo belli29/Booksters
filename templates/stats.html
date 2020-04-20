@@ -82,11 +82,12 @@
         //gets user choice
         author=$(this).find("option:selected").text();      
         //sends a request with user choice to the server 
-        fetch('/best_book_author/', {
+        fetch('/best_books/', {
             method: 'POST',
             // JSON payload
             body: JSON.stringify({
-                "author": author
+                "choice": author,
+                "cat": "author", 
             }),
             headers: new Headers({
                 "content-type": "application/json"
@@ -126,11 +127,12 @@
         //gets user choice
         genre=$(this).find("option:selected").text();      
         //sends a request with user choice to the server 
-        fetch('/best_book_genre/', {
+        fetch('/best_books/', {
             method: 'POST',
             // JSON payload
             body: JSON.stringify({
-                "genre": genre
+                "choice": genre,
+                "cat": "genre",   
             }),
             headers: new Headers({
                 "content-type": "application/json"
