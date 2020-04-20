@@ -231,9 +231,10 @@ def delete_book_sure(book_id):
 @app.route('/delete/<book_id>')
 def delete(book_id):
     books=mongo.db.books
-    book = books.find ({"_id":ObjectId(book_id)})
+    book_cursor = books.find ({"_id":ObjectId(book_id)})
+    book_name = list(book_cursor)[0]["book_title"]
     books.remove({"_id":ObjectId(book_id)})
-    flash("The book is now deleted from our database")
+    flash(f"{book_name.title()} is now deleted from our database")
     return redirect(url_for("get_books"))
 
 # directs to the edit page
@@ -241,9 +242,7 @@ def delete(book_id):
 def edit_book(book_id):
     books=mongo.db.books
     book_cursor=books.find({"_id":ObjectId(book_id)})
-    book=list(book_cursor)[0]
-    print(book)
-    
+    book=list(book_cursor)[0]  
     return render_template('edit_book.html', book=book 
                                            , genres= mongo.db.genres.find()
                                            , authors= mongo.db.authors.find()
@@ -270,6 +269,32 @@ def insert_author():
     else:
         flash(f"{new_author['author_name'].title()} already exists in the database!")
     return redirect(url_for("add_book"))
+
+#add a comment
+@app.route('/comment/<book_id>')
+def add_comment(book_id):
+    book = mongo.db.books.find_one({"_id":ObjectId(book_id)})
+    return render_template('add_comment.html', 
+                            book = book)
+
+#insert a comment
+@app.route('/insert_comment/<book_id>', methods=["POST"])
+def insert_comment(book_id):
+    books = mongo.db.books
+    book_cursor = mongo.db.books.find_one({"_id":ObjectId(book_id)})
+    new_comment=request.form.to_dict()
+    new_comment_list=[new_comment['book_comment'], new_comment['comment_author']]
+    book_comment_list= []
+    if 'book_comments' in list(book_cursor):
+          book_comment_list= book_cursor['book_comments']
+    book_comment_list.append(new_comment_list)
+    books.update_one( {'_id': ObjectId(book_id)},
+                      {'$set': {
+                                "book_comments": book_comment_list
+                               }})
+
+    flash(f"Thanks {new_comment['comment_author']}! Your comment has been pubblished.")
+    return redirect(url_for("get_book", book_title=book_cursor['book_title'], book_author=book_cursor['book_author']))
 
 @app.route('/vote/<book_title>')
 def update_rating(book_title):

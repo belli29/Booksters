@@ -10,7 +10,7 @@
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                 <label>Name of the book</label>
-                <input type="text" class="form-control" placeholder="{{book.book_title.title()}}"  onfocus="value='{{book.book_title.title()}}'"  name="book_title" id="book_title" required >
+                <input type="text" class="form-control" value="{{book.book_title.title()}}" name="book_title" id="book_title" required >
                 </div>
             </div>
             
@@ -45,7 +45,7 @@
             <div class="control-group">
                 <div class="form-group floating-label-form-group controls ">
                     <label>Book Description</label>
-                    <textarea id="new-book-description" rows= 10 placeholder="{{book.book_description}}" onfocus="value='{{book.book_description}}'" name="book_description" required></textarea>        
+                    <textarea id="new-book-description" rows= 10 placeholder="{{book.book_description}}"  name="book_description" required>{{book.book_description}}</textarea>        
                 </div>
             </div>
             <br>
