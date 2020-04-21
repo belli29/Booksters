@@ -33,12 +33,17 @@
     <!-- renders 4 info boxes -->
     <div class="row">
         <div class= "col-md-6 border p-5 stats-item">
-            <h1 class="text-center">What is the most voted book? </h1>
+            <h1 class="text-center">What is the most voted book ? </h1>
             <p>The book that was voted most times is {{ top_voted.book_title.title() }} by {{ top_voted.book_author.title()  }}. Users have rated it {{ top_voted.book_votes }} times.</p>
         </div>
         <div class= "col-md-6 border p-5 stats-item">
-            <h1  class="text-center">What is the book that people rated the highest? </h1>
-            <p>The book that has the highest rating is {{ top_rated.book_title.title() }} by {{ top_rated.book_author.title() }} with {{ top_rated.book_rating }}/5 overall score </p>
+            <h1  class="text-center">What is the top-rated book of today ? </h1>
+            {% if top_rated_today[1] == 0 %}
+               <p>Today, {{current_date}}, no book was rated.</p>
+               <p> What about sharing your opinion on a book in our database today? Just go on any book and click on Rate Book! </p>
+            {% else %}  
+            <p>Today, {{current_date}}, the top rated book is {{top_rated_today[0].title()}} with {{ top_rated_today[1] }}/5 overall score </p>
+            {% endif %}
         </div>
         <div class= "col-md-6 border p-5 stats-item">
             <h1  class="text-center">
@@ -115,7 +120,7 @@
                     .xUnits(dc.units.ordinal)
                     .yAxis().ticks(4);
             dc.renderAll();
-            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${author_books[0].book_title} with ${author_books[0].book_rating}/5 overall score`);
+            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${author_books[0].book_title} with ${author_books[0].book_rating}/5 overall score.`);
         }).catch(function () {
             $("#chart-books-author").addClass("d-none")
             $("#best-book-statement").text(`There is no book of ${author} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
@@ -160,7 +165,7 @@
                     .xUnits(dc.units.ordinal)
                     .yAxis().ticks(4);
             dc.renderAll();
-            $("#best-genre-statement").text(`The book of ${genre} that was rated the highest by our comunity is ${genre_books[0].book_title} with ${genre_books[0].book_rating}/5 overall score`);
+            $("#best-genre-statement").text(`The book of ${genre} that was rated the highest by our comunity is ${genre_books[0].book_title} with ${genre_books[0].book_rating}/5 overall score.`);
         }).catch(function () {
             $("#chart-books-genre").addClass("d-none")
             $("#best-genre-statement").text(`There is no book of ${genre} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')

@@ -44,5 +44,5 @@
 
 .dc-chart g.axis.x text {
     text-anchor: end !important;
-    transform: rotate(-40deg);
+    transform: rotate(-30deg);
     }

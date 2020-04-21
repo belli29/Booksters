@@ -173,7 +173,9 @@ def stats():
                             top_voted= top_voted,
                             authors= mongo.db.authors.find(),
                             genres= mongo.db.genres.find(),
-                            best_ten_books= best_ten_books())
+                            best_ten_books= best_ten_books(),
+                            top_rated_today=best_book_today(),
+                            current_date = date.today().strftime("%d %B %Y"))
 # renders add_book.html
 @app.route('/add_book')
 def add_book():
@@ -332,22 +334,23 @@ def best_books():
     else:
         return "no book found", 500
 
-# identifies rating of the book selected by user and return data (JSON format) to client side 
-@app.route('/selected_book_rating/', methods=['POST'])
-def selected_book_rating():
-    book=request.get_json()["book"].lower()
-    book_selected =list(mongo.db.books.find({"book_title": book}))
-    book_selected_rating= [rating_list for rating_list in book_selected[0]['book_rating']]
-    book_selected_rating_dict=[]
-    for rating in book_selected_rating:
-        book_selected_rating_dict.append(
-            {"rating" : rating[0],
-             "rating_date" : rating[1][3:] # gets only month and year of the rating dates
-            }
-        )
-    book_selected_rating_json = json.dumps(book_selected_rating_dict)
-    return book_selected_rating_json 
-     
+# identifies the top rated book of the current day 
+def best_book_today():
+    today = date.today().strftime("%d-%b-%Y")
+    books= mongo.db.books.find()
+    books_rated_today=[]
+    for book in books:
+        if book["book_rating"]:
+            title = book["book_title"]
+            today_ratings = [rating_list[0] for rating_list in book["book_rating"] if rating_list[1] ==  today]
+            today_average = 0
+            if today_ratings != []:
+                today_average  = round(mean (today_ratings),1)
+            books_rated_today.append([title, today_average])
+    top_rated_today = max(books_rated_today, key = lambda x: x[1])
+    current_day = date.today().strftime("%d %B %Y")
+    return top_rated_today
+
 if __name__ == '__main__':
     app.run(host = os.environ.get('IP'),
             port = int(os.environ.get('PORT')),
