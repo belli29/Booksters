@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 {% block header %}
-    <h1>Buy {{book_title.title()}}!</h1>
+    <h1>Buy {{book.book_title.title()}}</h1>
 {% endblock%}
 {% block content %}
     <p>Unfortunately this feature is not available at the moment. We apologize for the unconvenience.</p>
+    <div class="row">
+        <div class="col-8 col-sm-6 col-lg-12 mx-auto ">
+            <div class="d-flex flex-column flex-lg-row justify-content-center">
+                <a class="btn btn-secondary d-flex justify-content-center  my-2" href="{{ url_for('get_book', book_title = book.book_title, book_author=book.book_author) }}" >Come back to book </a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

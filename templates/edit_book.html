@@ -50,7 +50,17 @@
             </div>
             <br>
             <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary" >Edit book</button>
+                <div class="row">
+                    <div class="col-8 col-sm-6 col-lg-12 mx-auto ">
+                        <div class="d-flex flex-column flex-lg-row justify-content-center">
+                            <a class="btn btn-secondary d-flex justify-content-center  my-2" href="{{ url_for('get_book', book_title = book.book_title, book_author=book.book_author) }}" >Come back to book </a>
+                            <button type="submit" class="btn btn-primary d-flex justify-content-center  my-2" >Edit book</button>
+                        </div>
+                    </div>
+                </div>
+            </div>           
+        </div>
+                
             </div>
             </form>
         </div>

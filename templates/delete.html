@@ -8,8 +8,14 @@
         <div class="col-lg-8 col-md-10 mx-auto">
             <form action="{{ url_for('delete', book_id = book._id) }}" >
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary" >Yes!</button>
-                    <a class="btn btn-primary" href="{{url_for('get_book', book_title=book.book_title, book_author=book.book_author)}}">No</a>
+                     <div class="row">
+                        <div class="col-8 col-sm-6 col-lg-12 mx-auto ">
+                            <div class="d-flex flex-column flex-lg-row justify-content-center ">
+                                <button type="submit" class="btn btn-primary d-flex my-2 justify-content-center" >Yes!</button>
+                                <a class="btn btn-secondary d-flex my-2 justify-content-center" href="{{url_for('get_book', book_title=book.book_title, book_author=book.book_author)}}" >No</a>        
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

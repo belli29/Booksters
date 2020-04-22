@@ -42,7 +42,7 @@
                <p>Today, {{current_date}}, no book was rated.</p>
                <p> What about sharing your opinion on a book in our database today? Just go on any book and click on Rate Book! </p>
             {% else %}  
-            <p>Today, {{current_date}}, the top rated book is {{top_rated_today[0].title()}} with {{ top_rated_today[1] }}/5 overall score </p>
+            <p>Today, {{current_date}}, the top rated book is {{top_rated_today[0].title()}} with {{ top_rated_today[1] }}/5 overall score. </p>
             {% endif %}
         </div>
         <div class= "col-md-6 border p-5 stats-item">

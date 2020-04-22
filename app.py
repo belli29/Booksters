@@ -94,9 +94,10 @@ def get_books():
     return render_template('books.html', books=books)
 
 # gets the user to the store section
-@app.route('/store/<book_title>')
-def store(book_title):
-    return render_template('buy.html', book_title=book_title)
+@app.route('/store/<book_id>')
+def store(book_id):
+    book = mongo.db.books.find_one({"_id":ObjectId(book_id)})
+    return render_template('buy.html', book=book)
 
 # gets a spefic book in DB
 @app.route('/<book_author>/<book_title>')
@@ -270,7 +271,7 @@ def insert_author():
     authors=mongo.db.authors
     new_author=request.form.to_dict()
     if authors.count_documents({"author_name": new_author['author_name'].lower()}, limit=1) == 0:
-        authors.insert_one(new_author)
+        authors.insert_one(new_author.lower())
         flash(f"Thanks for adding {new_author['author_name'].title()} to our database!")
     else:
         flash(f"{new_author['author_name'].title()} already exists in the database!")
