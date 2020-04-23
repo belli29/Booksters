@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-8 col-sm-6 col-lg-12 mx-auto ">
             <div class="d-flex flex-column flex-lg-row justify-content-center">
-                <a class="btn btn-secondary d-flex justify-content-center  my-2" href="{{ url_for('get_book', book_title = book.book_title, book_author=book.book_author) }}" >Come back to book </a>
+                <a class="btn btn-secondary d-flex justify-content-center  my-2" href="{{ url_for('get_book', book_id= book._id) }}" >Come back to book </a>
             </div>
         </div>
     </div>

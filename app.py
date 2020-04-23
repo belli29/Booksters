@@ -83,7 +83,7 @@ def insert_rating(book_id):
                       {'$set': {
                                 "book_rating": book_rating
                                }})
-    return redirect(url_for("get_book", book_author=book['book_author'], book_title =book['book_title']))
+    return redirect(url_for("get_book", book_id=book_id))
 
 # gets all books in DB
 @app.route('/')
@@ -100,11 +100,11 @@ def store(book_id):
     return render_template('buy.html', book=book)
 
 # gets a spefic book in DB
-@app.route('/<book_author>/<book_title>')
-def get_book(book_author, book_title):
-    book = mongo.db.books.find_one({"book_title":book_title, "book_author":book_author})
+@app.route('/book/<book_id>')
+def get_book(book_id):
+    book = mongo.db.books.find_one({"_id":ObjectId(book_id)})
     book["star_rating"]=star_rating(book)
-    list_by_author = list(mongo.db.books.find({"book_author":book_author}))
+    list_by_author = list(mongo.db.books.find({"book_author":book["book_author"]}))
     if len(list_by_author) > 1:
         return render_template('book.html', book=book, author_list=True)
     else:
@@ -122,9 +122,8 @@ def search_book():
     book_input = request.form.get('book_input')
     book = mongo.db.books.find_one( { '$text': { '$search': book_input } } )
     if book:
-        title = book["book_title"]
-        author = book["book_author"]
-        return redirect(url_for("get_book", book_title=title, book_author=author))
+        book_id = book["_id"]
+        return redirect(url_for("get_book", book_id= book_id ))
     else:
         return redirect(url_for("get_book_error", book_input=book_input))
 
@@ -226,7 +225,7 @@ def update_book(book_id):
                                }})
     
     flash(" All info updated!")
-    return redirect(url_for("get_book", book_title= new_title, book_author= new_author))
+    return redirect(url_for("get_book", book_id= book_id))
 # directs to the delete page
 @app.route('/delete_book_sure/<book_id>')
 def delete_book_sure(book_id):
@@ -301,7 +300,7 @@ def insert_comment(book_id):
                                }})
 
     flash(f"Thanks {new_comment['comment_author']}! Your comment has been pubblished.")
-    return redirect(url_for("get_book", book_title=book_cursor['book_title'], book_author=book_cursor['book_author']))
+    return redirect(url_for("get_book", book_id= book_id))
 
 @app.route('/vote/<book_title>')
 def update_rating(book_title):
