@@ -20,7 +20,7 @@
             {% for book in best_ten_books %}
                 <li class="text-center col-md-6 mx-auto">
                     <p>
-                        <a href="{{url_for('get_book', book_author=book.book_author, book_title=book.book_title)}}">{{book.book_title.title()}}</a>
+                        <a href="{{url_for('get_book', book_id=book._id)}}">{{book.book_title.title()}}</a>
                         <span> {{book.book_stars}}</span>
                     </p>
                 </li>

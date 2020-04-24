@@ -58,6 +58,7 @@ def best_ten_books():
         if book['book_rating'] !=[]:
             mean_rating=round(mean([rating_list[0] for rating_list in book['book_rating']]),1)
         best_book_list.append({
+            "_id":book["_id"],
             "book_title":book["book_title"], 
             "book_author":book["book_author"],
             "book_rating":mean_rating,
@@ -161,6 +162,7 @@ def stats():
             mean_rating=round(mean ([rating_list[0] for rating_list in book['book_rating']]),1)
         votes=len(book["book_rating"])
         book_list.append({
+                        "_id":book["_id"],
                         "book_title":book["book_title"], 
                         "book_author":book["book_author"],
                         "book_rating":mean_rating,
