@@ -3,8 +3,8 @@ import unittest
 from flask import Flask, url_for, render_template, redirect, request
 from datetime import date
 from flask_pymongo import PyMongo
-from unittest.mock import patch
-from app import app, best_ten_books
+import requests
+from app import app, best_ten_books, delete
 class TestApp(unittest.TestCase):
     
     ########################
@@ -137,6 +137,21 @@ class TestApp(unittest.TestCase):
         finally:
             TestApp.remove_book(self, self.test_book)
     
+    # checks if delete() function correctly deletes a book
+    def test_delete_book(self):
+        self.local_test_book= self.test_book
+        TestApp.insert_book(self, self.local_test_book)
+        book_cursor= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
+        book_id= book_cursor['_id']
+        url= f"https://8080-c9e825b5-0108-4c3b-8a56-0151084c8a75.ws-eu01.gitpod.io/delete/{book_id}"
+        requests.get(url) # making a request to url corresponding to delete(booking_id) 
+        book_search= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
+        print(book_search)
+        try:
+            self.assertIsNone(book_search)
+        finally:
+            TestApp.remove_book(self, self.local_test_book)
+
     #### STATS page tests  ####
 
     # tests if the book rated the highest today is displayed correctly
@@ -146,10 +161,10 @@ class TestApp(unittest.TestCase):
         self.local_test_book['book_rating'] = [[6,self.today]]
         TestApp.insert_book(self, self.local_test_book) 
         response=self.server_response("/stats")
-        self.today_p= date.today().strftime("%d %b %Y")
+        self.today_p= date.today().strftime("%d %B %Y")
         self.title_p= self.local_test_book["book_title"].title()
         self.rating_p= self.local_test_book["book_rating"][0][0]
-        top_rated_today_p=f"Today, 24 April 2020, the top rated book is {self.title_p} with {self.rating_p}/5 overall score."
+        top_rated_today_p=f"Today, {self.today_p}, the top rated book is {self.title_p} with {self.rating_p}/5 overall score."
         try:
             self.assertIn(top_rated_today_p.encode(), response.data)
         finally:
