@@ -1,23 +1,23 @@
 {% extends 'base.html' %}
 {% block header %}
-    <h1>Edit {{book.book_title.title()}}</h1>   
+<h1>Edit {{book.book_title.title()}}</h1>
 {% endblock %}
 {% block content %}
-    <div class="container">
-        <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-            <form action="{{ url_for('update_book', book_id=book._id) }}" method="POST">
-            <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                <label>Name of the book</label>
-                <input type="text" class="form-control" value="{{book.book_title.title()}}" name="book_title" id="book_title" required >
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-md-10 mx-auto">
+			<form action="{{ url_for('update_book', book_id=book._id) }}" method="POST">
+				<div class="control-group">
+					<div class="form-group floating-label-form-group controls">
+						<label>Name of the book</label>
+						<input type="text" class="form-control" value="{{book.book_title.title()}}" name="book_title" id="book_title" required >
                 </div>
-            </div>
-            
-            <div class="control-group">
-                <div class="form-group col-xs-12 floating-label-form-group controls">
-                    <label>Choose an author</label>
-                    <select  class="custom-select" id="book_author" name="book_author" required>
+					</div>
+
+					<div class="control-group">
+						<div class="form-group col-xs-12 floating-label-form-group controls">
+							<label>Choose an author</label>
+							<select  class="custom-select" id="book_author" name="book_author" required>
                         {% for auth in authors %}
                             {% if auth.author_name== book.book_author %}
                                 <option value="{{auth.author_name}}" selected="selected">{{auth.author_name.title()}}</option>
@@ -25,13 +25,14 @@
                                 <option value="{{auth.author_name}}">{{auth.author_name.title()}}</option>
                             {% endif %}
                         {% endfor %}
-                    </select><a class="badge badge-light" href="{{url_for ('add_author')}}"><i class="fas fa-plus-circle"></i> Add Author</a>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="form-group col-xs-12 floating-label-form-group controls">
-                    <label>Choose a genre</label>
-                    <select  class="custom-select" id="book_genre" name="book_genre" required>
+                    </select><a class="badge badge-light"
+								href="{{url_for ('add_author')}}"><i class="fas fa-plus-circle"></i> Add Author</a>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="form-group col-xs-12 floating-label-form-group controls">
+							<label>Choose a genre</label>
+							<select  class="custom-select" id="book_genre" name="book_genre" required>
                         {% for gen in genres %}
                             {% if gen.genre_name == book.genre_name %}
                                 <option value="{{gen.genre_name}}" selected="selected">{{gen.genre_name.title()}}</option>
@@ -39,32 +40,34 @@
                                 <option value="{{gen.genre_name}}">{{gen.genre_name.title()}}</option>
                             {% endif %}
                         {% endfor %}
-                    </select><a class="badge badge-light" href="{{url_for ('add_genre')}}"><i class="fas fa-plus-circle"></i> Add Genre</a>
-                </div>
-            </div>
-            <div class="control-group">
-                <div class="form-group floating-label-form-group controls ">
-                    <label>Book Description</label>
-                    <textarea id="new-book-description" rows= 10 placeholder="{{book.book_description}}"  name="book_description" required>{{book.book_description}}</textarea>        
-                </div>
-            </div>
-            <br>
-            <div class="form-group text-center">
-                <div class="row">
-                    <div class="col-8 col-sm-6 col-lg-12 mx-auto ">
-                        <div class="d-flex flex-column flex-lg-row justify-content-center">
-                            <a class="btn btn-secondary d-flex justify-content-center  my-2" href="{{ url_for('get_book', book_id= book._id) }}" >Come back to book </a>
-                            <button type="submit" class="btn btn-primary d-flex justify-content-center  my-2" >Edit book</button>
-                        </div>
-                    </div>
-                </div>
-            </div>           
-        </div>
-                
-            </div>
-            </form>
-        </div>
-        </div>
-    </div>
-  
+                    </select><a class="badge badge-light"
+								href="{{url_for ('add_genre')}}"><i class="fas fa-plus-circle"></i> Add Genre</a>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="form-group floating-label-form-group controls ">
+							<label>Book Description</label>
+							<textarea id="new-book-description" rows= 10 placeholder="{{book.book_description}}"  name="book_description" required>{{book.book_description}}</textarea>
+						</div>
+					</div>
+					<br>
+					<div class="form-group text-center">
+						<div class="row">
+							<div class="col-8 col-sm-6 col-lg-12 mx-auto ">
+								<div class="d-flex flex-column flex-lg-row justify-content-center">
+									<a class="btn btn-secondary d-flex justify-content-center  my-2"
+										href="{{ url_for('get_book', book_id= book._id) }}">Come back to book </a>
+									<button type="submit" class="btn btn-primary d-flex justify-content-center  my-2" >Edit book</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+		</div>
+		</form>
+	</div>
+</div>
+</div>
+
 {% endblock %}

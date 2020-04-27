@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% block header %}
-    <h1>Authors</h1>
+<h1>Authors</h1>
 {% endblock%}
 {% block content %}
-    {% for author in authors %}
-        <div class="post-preview text-center">
-            <a href="{{url_for('get_books_by_author', author_name=author.author_name)}}">
-                <h2 class="post-title">
-                    {{author.author_name.title()}}
-                </h2>
-            </a>
-        </div>  
-        <hr>
-    {% endfor %}
- {% endblock %}
+{% for author in authors %}
+<div class="post-preview text-center">
+	<a href="{{url_for('get_books_by_author', author_name=author.author_name)}}">
+		<h2 class="post-title">
+			{{author.author_name.title()}}
+		</h2>
+	</a>
+</div>
+<hr>
+{% endfor %}
+{% endblock %}

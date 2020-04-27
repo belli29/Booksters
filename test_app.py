@@ -3,8 +3,8 @@ import unittest
 from flask import Flask, url_for, render_template, redirect, request
 from datetime import date
 from flask_pymongo import PyMongo
-import requests
-from app import app, best_ten_books, delete
+import unittest.mock as mock
+from app import app, best_ten_books, delete, update_book
 class TestApp(unittest.TestCase):
     
     ########################
@@ -143,15 +143,27 @@ class TestApp(unittest.TestCase):
         TestApp.insert_book(self, self.local_test_book)
         book_cursor= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
         book_id= book_cursor['_id']
-        url= f"https://8080-c9e825b5-0108-4c3b-8a56-0151084c8a75.ws-eu01.gitpod.io/delete/{book_id}"
-        requests.get(url) # making a request to url corresponding to delete(booking_id) 
+        response=self.server_response(f"/delete/{book_id}")   
         book_search= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
-        print(book_search)
         try:
             self.assertIsNone(book_search)
         finally:
             TestApp.remove_book(self, self.local_test_book)
 
+    # checks if update_book() function correctly edit a book
+    def test_edit_book(self):
+        self.local_test_book= self.test_book
+        TestApp.insert_book(self, self.local_test_book)
+        book_cursor= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
+        book_id= book_cursor['_id']
+        try:
+            with mock.patch('app.update_book') as mocked_get:
+                mocked_get.new_details = {'book_title': 'updated title', 'book_author':'updated author', 'book_genre':'updated genre' , 'book_description': 'updated description'} 
+                response=self.server_response(f"/update_book/{book_id}")
+                book_search= TestApp.books.find_one({"_id": book_id})
+                self.assertEqual('updated title', book_search['book_title'])
+        finally:
+            TestApp.remove_book(self, self.local_test_book)
     #### STATS page tests  ####
 
     # tests if the book rated the highest today is displayed correctly
@@ -162,9 +174,10 @@ class TestApp(unittest.TestCase):
         TestApp.insert_book(self, self.local_test_book) 
         response=self.server_response("/stats")
         self.today_p= date.today().strftime("%d %B %Y")
+        self.id_p= self.local_test_book["_id"]
         self.title_p= self.local_test_book["book_title"].title()
         self.rating_p= self.local_test_book["book_rating"][0][0]
-        top_rated_today_p=f"Today, {self.today_p}, the top rated book is {self.title_p} with {self.rating_p}/5 overall score."
+        top_rated_today_p=f'Today, {self.today_p}, the top rated book is <a href="/book/{self.id_p}">{self.title_p}</a> with {self.rating_p}/5 overall score.'
         try:
             self.assertIn(top_rated_today_p.encode(), response.data)
         finally:
@@ -192,7 +205,9 @@ class TestApp(unittest.TestCase):
         self.local_test_book['book_rating'] = most_voted_book_rating_list_plus_one # creates a book with 1+ vote than the most voted book in DB
         TestApp.insert_book(self, self.local_test_book) 
         response=self.server_response("/stats")
-        most_voted_p=f"The book that was voted most times is {self.local_test_book['book_title'].title()} by {self.local_test_book['book_author'].title()}."
+        book_id = self.local_test_book['_id']
+        book_title = self.local_test_book['book_title'].title()
+        most_voted_p=f'The book that was voted most times is <a href="/book/{book_id}">{book_title}</a>'
         try:
             self.assertIn(most_voted_p.encode(), response.data)
         finally:

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>Looking for a book?</h1>
-    <span class="subheading">
+<h1>Looking for a book?</h1>
+<span class="subheading">
         <div Looking for a book?class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
@@ -29,24 +29,23 @@
 {% endblock %}
 
 {% block content %}
-    {% for book in books %}
-        <div class="post-preview book-item">
-            <a href="{{url_for('get_book', book_id=book._id)}}">
-                <h2 class="post-title">
-                    {{book.book_title.title()}}
-                </h2>
-            </a>
-            <p class="post-meta"> by
-                <a href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a>
-            </p>
-            <p class="post-subtitle">
-                {{book.book_short_description}}
-            </p>
-            <h4 class="post-subtitle stars">{{book.star_rating}}</h4>
-            <p class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</p>           
-                
-        </div>  
-        <hr>
-    {% endfor %}
- {% endblock %}
- 
+{% for book in books %}
+<div class="post-preview book-item">
+	<a href="{{url_for('get_book', book_id=book._id)}}">
+		<h2 class="post-title">
+			{{book.book_title.title()}}
+		</h2>
+	</a>
+	<p class="post-meta"> by
+		<a href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a>
+	</p>
+	<p class="post-subtitle">
+		{{book.book_short_description}}
+	</p>
+	<h4 class="post-subtitle stars">{{book.star_rating}}</h4>
+	<p class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</p>
+
+</div>
+<hr>
+{% endfor %}
+{% endblock %}

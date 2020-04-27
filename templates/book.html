@@ -1,63 +1,69 @@
 {% extends 'base.html' %}
 {% block header %}
-    <div class="post-preview">
-        <h1>{{book.book_title.title()}}</h1> 
-        <p> by
-            <h5>
-                <a id="author-book-page" href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a> 
-            </h5>
-            {% if author_list == True %}
-                <a class="badge badge-danger" href="{{url_for('get_books_by_author', author_name=book.book_author)}}">
-                    We have more books of this author.
-                    <br>Click here to check them out!
+<div class="post-preview">
+	<h1>{{book.book_title.title()}}</h1>
+	<p> by
+		<h5>
+			<a id="author-book-page"
+				href="{{url_for('get_books_by_author', author_name=book.book_author)}}">{{book.book_author.title()}}</a>
+		</h5>
+		{% if author_list == True %}
+		<a class="badge badge-danger" href="{{url_for('get_books_by_author', author_name=book.book_author)}}">
+			We have more books of this author.
+			<br>Click here to check them out!
                 </a>
-            {% endif %} 
-        </p>
-    </div>
+			{% endif %}
+	</p>
+</div>
 {% endblock %}
 {% block content %}
 <article>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-10 mx-auto">
-                {{book.book_description}}
-            </div> 
-        </div> 
-        <div class="row">
-            <div class="col-lg-8 col-md-10 mx-auto text-center">
-                <p>
-                    <h4 id= "rating" class="post-subtitle">{{book.star_rating}}</h4>
-                    <div class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</div> 
-                    
-                </p>
-            </div>    
-        </div>
-        <div class="row">
-            <div class="col-8 col-sm-6 col-lg-12 mx-auto ">
-                <div class="d-flex flex-column flex-lg-row justify-content-center">
-                    <a class="btn btn-primary d-flex justify-content-center  my-2" href="{{url_for('update_rating', book_title= book.book_title)}}">Rate book</a>
-                    <a class="btn btn-primary d-flex justify-content-center  my-2" href="{{url_for('edit_book', book_id = book._id)}}">Edit book</a>
-                    <a class="btn btn-primary d-flex justify-content-center  my-2" href="{{ url_for('delete_book_sure', book_id = book._id) }}" >Delete book</a>
-                    <a class="btn btn-primary d-flex justify-content-center  my-2" href="{{ url_for('add_comment', book_id = book._id) }}" >Leave a comment </a>
-                    <a class="btn btn-danger d-flex justify-content-center  my-2" href="{{url_for('store', book_id = book._id)}}">Buy it here!</a>
-                </div>
-            </div>        
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-md-10 mx-auto">
-                <h3 class='text-center'>Comments</h3>
-                {% if book.book_comments %}
-                    {% for comment in book.book_comments %}
-                        <blockquote class="blockquote">
-                            <p class="mb-0">{{comment[0]}}</p>
-                            <footer class="blockquote-footer">{{comment[1]}}</footer>
-                        </blockquote>
-                    {% endfor %}
-                {% endif %}
-            </div> 
-        </div> 
-    </div>   
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 mx-auto">
+				{{book.book_description}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-8 col-md-10 mx-auto text-center">
+				<p>
+					<h4 id="rating" class="post-subtitle">{{book.star_rating}}</h4>
+					<div class="font-italic font-weight-lighter small">Based on {{book.book_rating|length}} votes</div>
+
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-8 col-sm-6 col-lg-12 mx-auto ">
+				<div class="d-flex flex-column flex-lg-row justify-content-center">
+					<a class="btn btn-primary d-flex justify-content-center  my-2"
+						href="{{url_for('update_rating', book_title= book.book_title)}}">Rate book</a>
+					<a class="btn btn-primary d-flex justify-content-center  my-2"
+						href="{{url_for('edit_book', book_id = book._id)}}">Edit book</a>
+					<a class="btn btn-primary d-flex justify-content-center  my-2"
+						href="{{ url_for('delete_book_sure', book_id = book._id) }}">Delete book</a>
+					<a class="btn btn-primary d-flex justify-content-center  my-2"
+						href="{{ url_for('add_comment', book_id = book._id) }}">Leave a comment </a>
+					<a class="btn btn-danger d-flex justify-content-center  my-2"
+						href="{{url_for('store', book_id = book._id)}}">Buy it here!</a>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-10 mx-auto">
+				<h3 class='text-center'>Comments</h3>
+				{% if book.book_comments %}
+				{% for comment in book.book_comments %}
+				<blockquote class="blockquote">
+					<p class="mb-0">{{comment[0]}}</p>
+					<footer class="blockquote-footer">{{comment[1]}}</footer>
+				</blockquote>
+				{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
 </article>
 <hr>
 {% endblock %}

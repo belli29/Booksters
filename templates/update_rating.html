@@ -1,61 +1,63 @@
 {% extends 'base.html' %}
+{% block head %}
+<!-- Jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% endblock%}
 {% block header %}
-    <h1>How would you rate {{book.book_title.title()}} ?</h1>   
+<h1>How would you rate {{book.book_title.title()}} ?</h1>
 {% endblock %}
 {% block content %}
-    <div class="container text-center">
-        <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-            <form action="{{ url_for('insert_rating', book_id = book._id) }}" method="POST">
-            <div class="control-group">
-                <h4>
-                    <div class=" controls post-subtitle">
-                        <input type="int" name="rating" id="rating" hidden required>
-                        <span class="stars" id="1" >✩</span>
-                        <span class="stars" id="2" >✩</span>
-                        <span class="stars" id="3" >✩</span>
-                        <span class="stars" id="4" >✩</span>
-                        <span class="stars" id="5" >✩</span>
-                    </div>
-                </h4>
-            </div>
-            <hr>
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-8 col-sm-6 col-lg-12 mx-auto ">
-                        <div class="d-flex flex-column flex-lg-row justify-content-center">
-                            <a class="btn btn-secondary d-flex justify-content-center  my-2" href="{{ url_for('get_book', book_id=book._id) }}" >Come back to book </a>
-                            <button type="submit" class="btn btn-primary d-flex justify-content-center  my-2" >Rate this book</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-        </div>
-    </div>
-    <!-- importing jquery-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- modifies the DOM (stars) and records best choice in $('#rating')-->
-    <script type="text/javascript">
-        function update_rating(){
-            var rating
-            var starsArray=['1','2','3','4','5']
-            for (s of starsArray) {
-                                    // records the rating chosen in #rating and visually highlights stars as mouse passes over                                
-                                    $('#'.concat(s)).mouseover(function() {
-                                                                            $('#rating').val(this.id);
-                                                                            var index = starsArray.indexOf(this.id);                                               
-                                                                            for (x of starsArray.slice(0 , index+1)) {
-                                                                                $('#'.concat(x)).html('★');
-                                                                                };
-                                                                            for (x of starsArray.slice(index+1)) {
-                                                                                $('#'.concat(x)).html('✩');
-                                                                                };
-                                                                            });
-                                    };
+<div class="container text-center">
+	<div class="row">
+		<div class="col-lg-8 col-md-10 mx-auto">
+			<form action="{{ url_for('insert_rating', book_id = book._id) }}" method="POST">
+				<div class="control-group">
+					<h4>
+						<div class=" controls post-subtitle">
+							<input type="int" name="rating" id="rating" hidden required>
+							<span class="stars" id="1" >✩</span>
+							<span class="stars" id="2" >✩</span>
+							<span class="stars" id="3" >✩</span>
+							<span class="stars" id="4" >✩</span>
+							<span class="stars" id="5" >✩</span>
+						</div>
+					</h4>
+				</div>
+				<hr>
+				<div class="form-group">
+					<div class="row">
+						<div class="col-8 col-sm-6 col-lg-12 mx-auto ">
+							<div class="d-flex flex-column flex-lg-row justify-content-center">
+								<a class="btn btn-secondary d-flex justify-content-center  my-2"
+									href="{{ url_for('get_book', book_id=book._id) }}">Come back to book </a>
+								<button type="submit" class="btn btn-primary d-flex justify-content-center  my-2" >Rate this book</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- modifies the DOM (stars) and records best choice in $('#rating')-->
+<script type="text/javascript">
+function update_rating() {
+    var rating
+    var starsArray = ['1', '2', '3', '4', '5']
+    for (s of starsArray) {
+        // records the rating chosen in #rating and visually highlights stars as mouse passes over                                
+        $('#'.concat(s)).mouseover(function() {
+            $('#rating').val(this.id);
+            var index = starsArray.indexOf(this.id);
+            for (x of starsArray.slice(0, index + 1)) {
+                $('#'.concat(x)).html('★');
             };
-        update_rating()    
-    </script>
+            for (x of starsArray.slice(index + 1)) {
+                $('#'.concat(x)).html('✩');
+            };
+        });
+    };
+};
+update_rating()
+</script>
 {% endblock %}
-

@@ -1,54 +1,57 @@
 {% extends 'base.html' %}
 {% block head %}
-    <!-- Jquery-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- libaries to render the chart-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.min.css" type="text/css" />
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
+<!-- Jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- libaries to render the chart-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.min.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js">
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.8/dc.js"></script>
 {% endblock%}
 {% block header %}
-    <h1>Stats</h1>
+<h1>Stats</h1>
 {% endblock%}
 {% block content %}
-    <!-- renders the 10 top rated books list-->
-    <div class="row">
-        <div id="top-ten-books" class= "col-md-12 border stats-item text-center mb-5">
-            <h1>Our top rated books</h1>
-            <ol>
-            {% for book in best_ten_books %}
-                <li class="text-center col-md-6 mx-auto">
-                    <p>
-                        <a href="{{url_for('get_book', book_id=book._id)}}">{{book.book_title.title()}}</a>
-                        <span> {{book.book_stars}}</span>
-                    </p>
-                </li>
-            {% endfor %}
-            </ol>      
-            
-        </div>
-        
-    </div>
-    <!-- renders 4 info boxes -->
-    <div class="row">
-        <div class= "col-md-6 border p-5 stats-item">
-            <h1 class="text-center">What is the most voted book ? </h1>
-            <p>The book that was voted most times is {{ top_voted.book_title.title() }} by {{ top_voted.book_author.title()  }}. Users have rated it {{ top_voted.book_votes }} times.</p>
-        </div>
-        <div class= "col-md-6 border p-5 stats-item">
-            <h1  class="text-center">What is the top-rated book of today ? </h1>
-            {% if top_rated_today[1] == 0 %}
-               <p>Today, {{current_date}}, no book was rated.</p>
-               <p> What about sharing your opinion on a book in our database today? Just go on any book and click on Rate Book! </p>
-            {% else %}  
-            <p>Today, {{current_date}}, the top rated book is {{top_rated_today[0].title()}} with {{ top_rated_today[1] }}/5 overall score. </p>
-            {% endif %}
-        </div>
-        <div class= "col-md-6 border p-5 stats-item">
-            <h1  class="text-center">
-                <span class="d-inline">What is the highest rated book of </span>
-                <span class="d-inline">
+<!-- renders the 10 top rated books list-->
+<div class="row">
+	<div id="top-ten-books" class="col-md-12 border stats-item text-center mb-5">
+		<h1>Our top rated books</h1>
+		<ol>
+			{% for book in best_ten_books %}
+			<li class="text-center col-md-6 mx-auto">
+				<p>
+					<a href="{{url_for('get_book', book_id=book._id)}}">{{book.book_title.title()}}</a>
+					<span> {{book.book_stars}}</span>
+				</p>
+			</li>
+			{% endfor %}
+		</ol>
+
+	</div>
+
+</div>
+<!-- renders 4 info boxes -->
+<div class="row">
+	<div class="col-md-6 border p-5 stats-item">
+		<h1 class="text-center">What is the most voted book ? </h1>
+		<p>The book that was voted most times is <a href="{{url_for('get_book', book_id=top_voted._id)}}">{{ top_voted.book_title.title() }}</a>. 
+        Users have rated it {{ top_voted.book_votes }} times.</p>
+	</div>
+	<div class="col-md-6 border p-5 stats-item">
+		<h1 class="text-center">What is the top-rated book of today ? </h1>
+		{% if top_rated_today[1] == 0 %}
+		<p>Today, {{current_date}}, no book was rated.</p>
+		<p> What about sharing your opinion on a book in our database today? Just go on any book and click on Rate Book!
+		</p>
+		{% else %}
+		<p>Today, {{current_date}}, the top rated book is <a href="{{url_for('get_book', book_id=top_rated_today[0])}}">{{top_rated_today[1].title()}}</a> with {{ top_rated_today[2] }}/5 overall score. </p>
+		{% endif %}
+	</div>
+	<div class="col-md-6 border p-5 stats-item">
+		<h1 class="text-center">
+			<span class="d-inline">What is the highest rated book of </span>
+			<span class="d-inline">
                     <select  class="custom-select stats-select" id="author_select" name="book_author">
                         <option value="" disabled selected>Choose Author</option>
                         {% for auth in authors %}
@@ -56,18 +59,18 @@
                         {% endfor %}
                     </select>                
                 </span>
-                <span class="d-inline">?</span>
-            </h1>
-            <p id='best-book-statement'></p>
-            <p id='chart-books-author'></p>
-            <script>
-             
-            </script>
-        </div>
-        <div class= "col-md-6 border p-5 stats-item">
-            <h1  class="text-center">
-                <span class="d-inline">What is the highest rated book of genre </span>
-                <span class="d-inline">
+			<span class="d-inline">?</span>
+		</h1>
+		<p id='best-book-statement'></p>
+		<p id='chart-books-author'></p>
+		<script>
+
+		</script>
+	</div>
+	<div class="col-md-6 border p-5 stats-item">
+		<h1 class="text-center">
+			<span class="d-inline">What is the highest rated book of genre </span>
+			<span class="d-inline">
                     <select  class="custom-select stats-select" id="genre_select" name="book_genre">
                         <option value="" disabled selected>Choose Genre</option>
                         {% for gen in genres %}
@@ -75,106 +78,112 @@
                         {% endfor %}
                     </select>                
                 </span>
-                <span class="d-inline">?</span>
-            </h1>
-            <p id='best-genre-statement'></p>
-            <p id='chart-books-genre'></p>
-        </div>
-    </div>
-<script> 
-    //the script is triggered by a change in the field GENRE
-    $("select#author_select").change(function () {
-        //gets user choice
-        author=$(this).find("option:selected").text();      
-        //sends a request with user choice to the server 
-        fetch('/best_books/', {
-            method: 'POST',
-            // JSON payload
-            body: JSON.stringify({
-                "choice": author,
-                "cat": "author", 
-            }),
-            headers: new Headers({
-                "content-type": "application/json"
-            }),
-            cache: "no-cache",
-            credentials: "include"
+			<span class="d-inline">?</span>
+		</h1>
+		<p id='best-genre-statement'></p>
+		<p id='chart-books-genre'></p>
+	</div>
+</div>
+<script>
+//the script is triggered by a change in the field AUTHOR
+$("select#author_select").change(function() {
+    //gets user choice
+    author = $(this).find("option:selected").text();
+    //sends a request with user choice to the server 
+    fetch('/best_books/', {
+        method: 'POST',
+        // JSON payload
+        body: JSON.stringify({
+            "choice": author,
+            "cat": "author",
+        }),
+        headers: new Headers({
+            "content-type": "application/json"
+        }),
+        cache: "no-cache",
+        credentials: "include"
         //collects server response
-        }).then(function (response) { 
-            return response.json();
+    }).then(function(response) {
+        return response.json();
         //parse server response and amends DOM accordigly 
-        }).then(function (json) {
-            $('#chart-books-author').removeClass("d-none");
-            let author_books= json;
-            var ndx = crossfilter(author_books);
-            var title_dim = ndx.dimension(dc.pluck('book_title'));
-            var averageRating = title_dim.group().reduceSum(dc.pluck('book_rating'));
-            dc.barChart('#chart-books-author')
-                    .width(300)
-                    .height(150)
-                    .margins({top: 10, right: 50, bottom: 100, left: 50})
-                    .dimension(title_dim)
-                    .group(averageRating)
-                    .transitionDuration(500)
-                    .x(d3.scale.ordinal())
-                    .xUnits(dc.units.ordinal)
-                    .yAxis().ticks(4);
-            dc.renderAll();
-            $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${author_books[0].book_title} with ${author_books[0].book_rating}/5 overall score.`);
-        }).catch(function () {
-            $("#chart-books-author").addClass("d-none")
-            $("#best-book-statement").text(`There is no book of ${author} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
-        })
-        
-    }) ;
-    //the script is triggered by a change in the field GENRE
-    $("select#genre_select").change(function () {
-        //gets user choice
-        genre=$(this).find("option:selected").text();      
-        //sends a request with user choice to the server 
-        fetch('/best_books/', {
-            method: 'POST',
-            // JSON payload
-            body: JSON.stringify({
-                "choice": genre,
-                "cat": "genre",   
-            }),
-            headers: new Headers({
-                "content-type": "application/json"
-            }),
-            cache: "no-cache",
-            credentials: "include"
+    }).then(function(json) {
+        $('#chart-books-author').removeClass("d-none");
+        let author_books = json;
+        var ndx = crossfilter(author_books);
+        var title_dim = ndx.dimension(dc.pluck('book_title'));
+        var averageRating = title_dim.group().reduceSum(dc.pluck('book_rating'));
+        dc.barChart('#chart-books-author')
+            .width(300)
+            .height(150)
+            .margins({
+                top: 10,
+                right: 50,
+                bottom: 100,
+                left: 50
+            })
+            .dimension(title_dim)
+            .group(averageRating)
+            .transitionDuration(500)
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .yAxis().ticks(4);
+        dc.renderAll();
+        $("#best-book-statement").text(`The book of ${author} that was rated the highest by our comunity is ${author_books[0].book_title} with ${author_books[0].book_rating}/5 overall score.`);
+    }).catch(function() {
+        $("#chart-books-author").addClass("d-none")
+        $("#best-book-statement").text(`There is no book of ${author} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
+    })
+
+});
+//the script is triggered by a change in the field GENRE
+$("select#genre_select").change(function() {
+    //gets user choice
+    genre = $(this).find("option:selected").text();
+    //sends a request with user choice to the server 
+    fetch('/best_books/', {
+        method: 'POST',
+        // JSON payload
+        body: JSON.stringify({
+            "choice": genre,
+            "cat": "genre",
+        }),
+        headers: new Headers({
+            "content-type": "application/json"
+        }),
+        cache: "no-cache",
+        credentials: "include"
         //collects server response
-        }).then(function (response) { 
-            return response.json();
+    }).then(function(response) {
+        return response.json();
         //parse server response and amends DOM accordigly 
-        }).then(function (json) {
-            $('#chart-books-genre').removeClass("d-none");
-            let genre_books= json;
-            var ndx = crossfilter(genre_books);
-            var title_dim = ndx.dimension(dc.pluck('book_title'));
-            var averageRating = title_dim.group().reduceSum(dc.pluck('book_rating'));
-            dc.barChart('#chart-books-genre')
-                    .width(300)
-                    .height(150)
-                    .margins({top: 10, right: 50, bottom: 100, left: 50})
-                    .dimension(title_dim)
-                    .group(averageRating)
-                    .transitionDuration(500)
-                    .x(d3.scale.ordinal())
-                    .xUnits(dc.units.ordinal)
-                    .yAxis().ticks(4);
-            dc.renderAll();
-            $("#best-genre-statement").text(`The book of ${genre} that was rated the highest by our comunity is ${genre_books[0].book_title} with ${genre_books[0].book_rating}/5 overall score.`);
-        }).catch(function () {
-            $("#chart-books-genre").addClass("d-none")
-            $("#best-genre-statement").text(`There is no book of ${genre} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
-        })
-        
-    }) ;
+    }).then(function(json) {
+        $('#chart-books-genre').removeClass("d-none");
+        let genre_books = json;
+        var ndx = crossfilter(genre_books);
+        var title_dim = ndx.dimension(dc.pluck('book_title'));
+        var averageRating = title_dim.group().reduceSum(dc.pluck('book_rating'));
+        dc.barChart('#chart-books-genre')
+            .width(300)
+            .height(150)
+            .margins({
+                top: 10,
+                right: 50,
+                bottom: 100,
+                left: 50
+            })
+            .dimension(title_dim)
+            .group(averageRating)
+            .transitionDuration(500)
+            .x(d3.scale.ordinal())
+            .xUnits(dc.units.ordinal)
+            .yAxis().ticks(4);
+        dc.renderAll();
+        $("#best-genre-statement").text(`The book of ${genre} that was rated the highest by our comunity is ${genre_books[0].book_title} with ${genre_books[0].book_rating}/5 overall score.`);
+    }).catch(function() {
+        $("#chart-books-genre").addClass("d-none")
+        $("#best-genre-statement").text(`There is no book of ${genre} in our database. `).append('<a class=" badge badge-danger" href="/add_book">Why not adding one?</a>')
+    })
+
+});
 </script>
-
 {% endblock %}
-
-
-
