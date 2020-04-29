@@ -13,7 +13,8 @@ class TestApp(unittest.TestCase):
     
     mongo=PyMongo(app)
     books=mongo.db.books
-    
+    authors=mongo.db.authors
+    genres=mongo.db.genres
     #test book
 
     
@@ -137,7 +138,7 @@ class TestApp(unittest.TestCase):
         finally:
             TestApp.remove_book(self, self.test_book)
     
-    # checks if delete() function correctly deletes a book
+    # checks if delete() correctly deletes a book
     def test_delete_book(self):
         self.local_test_book= self.test_book
         TestApp.insert_book(self, self.local_test_book)
@@ -149,21 +150,173 @@ class TestApp(unittest.TestCase):
             self.assertIsNone(book_search)
         finally:
             TestApp.remove_book(self, self.local_test_book)
+    
+    # checks if insert_book() correctly adds a book
+    # and if app prevents the user from adding a book already present
+    def test_insert_book(self):
+        self.local_test_book= self.test_book
+        try:
+            with self.test_client as client:
+                response = client.post(f"/insert_book",
+                                        data= self.local_test_book
+                                    )
+                book_search= TestApp.books.find_one({"book_title": self.local_test_book['book_title']})
+                self.assertEqual(self.local_test_book['book_title'], book_search['book_title'])
+                # Checks if user is blocked when trying to add a book with the same author and title of one already in DB
+                response = client.post(f"/insert_book",
+                                        data= {
+                                            'book_title': self.local_test_book['book_title'],
+                                            'book_author':self.local_test_book['book_author'],
+                                            'book_genre':'different genre',
+                                            'book_description': 'different description'
+                                        },
+                                        follow_redirects=True
+                                    )
+                self.book_count= TestApp.books.count_documents(
+                    {"book_title": self.local_test_book['book_title'],
+                     "book_author": self.local_test_book['book_author']
+                     }
+                ) 
+                self.assertEqual(1,self.book_count)
+                self.assertIn(b'already exists in the database!', response.data)
+        finally:
+            TestApp.remove_book(self, {"book_title": self.local_test_book['book_title']})
 
-    # checks if update_book() function correctly edit a book
+    # checks if insert_author() correctly adds an author
+    # and if app prevents the user from adding an author already present
+    def test_insert_author(self):
+        try:
+            with self.test_client as client:
+                response = client.post(f"/insert_author",
+                                        data= {
+                                            'author_name': self.author
+                                        }
+                                    )
+                book_search= TestApp.authors.find_one({"author_name": self.author})
+                self.assertEqual(self.author, book_search['author_name'])
+                # Checks if user is blocked when trying to add author already in DB
+                response = client.post(f"/insert_author",
+                                        data= {
+                                            'author_name': self.author
+                                        },
+                                        follow_redirects=True
+                                    )
+                self.author_count= TestApp.authors.count_documents(
+                    {
+                       'author_name': self.author 
+                    }
+                ) 
+                self.assertEqual(1,self.author_count)
+                self.assertIn(b'already exists in the database!', response.data)
+        finally:
+            TestApp.authors.delete_one({
+                'author_name': self.author
+                }
+            )
+    
+    # checks if insert_genre() correctly adds a genre
+    # and if app prevents the user from adding a genre already present
+    def test_insert_genre(self):
+        try:
+            with self.test_client as client:
+                response = client.post(f"/insert_genre",
+                                        data= {
+                                            'genre_name': self.genre
+                                        }
+                                    )
+                book_search= TestApp.genres.find_one({"genre_name": self.genre})
+                self.assertEqual(self.genre, book_search['genre_name'])
+                # Checks if user is blocked when trying to add genre already in DB
+                response = client.post(f"/insert_genre",
+                                        data= {
+                                            'genre_name': self.genre
+                                        },
+                                        follow_redirects=True
+                                    )
+                self.genre_count= TestApp.genres.count_documents(
+                    {
+                       'genre_name': self.genre
+                    }
+                ) 
+                self.assertEqual(1,self.genre_count)
+                self.assertIn(b'already exists in the database!', response.data)
+        finally:
+            TestApp.authors.delete_one({
+                'author_name': self.author
+                }
+            )
+
+
+    # checks if update_book() correctly edits a book
     def test_edit_book(self):
         self.local_test_book= self.test_book
         TestApp.insert_book(self, self.local_test_book)
         book_cursor= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
         book_id= book_cursor['_id']
         try:
-            with mock.patch('app.update_book') as mocked_get:
-                mocked_get.new_details = {'book_title': 'updated title', 'book_author':'updated author', 'book_genre':'updated genre' , 'book_description': 'updated description'} 
-                response=self.server_response(f"/update_book/{book_id}")
+            with self.test_client as client:
+                response = client.post(f"/update_book/{book_id}",
+                                        data={
+                                            'book_title': 'updated title',
+                                            'book_author':'updated author',
+                                            'book_genre':'updated genre',
+                                            'book_description': 'updated description'
+                                        }
+                                    )
                 book_search= TestApp.books.find_one({"_id": book_id})
                 self.assertEqual('updated title', book_search['book_title'])
         finally:
-            TestApp.remove_book(self, self.local_test_book)
+            TestApp.remove_book(self, {"book_title": "updated title"})
+    
+
+    # checks if insert_rating() correctly modifies the rating list 
+    def test_insert_rating(self):
+        self.local_test_book= self.test_book
+        TestApp.insert_book(self, self.local_test_book)
+        book_cursor= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
+        current_rating= book_cursor["book_rating"]
+        new_rating= "1"
+        rating_date = date.today().strftime("%d-%b-%Y")
+        new_rating_list= [int(new_rating), rating_date]
+        current_rating.append(new_rating_list)
+        book_id= book_cursor['_id']
+        try:
+            with self.test_client as client:
+                response = client.post(f"/insert_rating/{book_id}",
+                                        data={
+                                            'rating': new_rating,
+                                        }
+                                    )
+                book_search= TestApp.books.find_one({"_id": book_id})
+                self.assertEqual(current_rating, book_search['book_rating'])
+        finally:
+            TestApp.remove_book(self, {"_id": book_id})
+    
+    # checks if insert_comment() correctly modifies the comments list 
+    def test_insert_comment(self):
+        self.local_test_book= self.test_book
+        TestApp.insert_book(self, self.local_test_book)
+        book_cursor= TestApp.books.find_one({"book_title": self.local_test_book ['book_title']})
+        current_comments=[]
+        if "book_comments" in book_cursor :
+            current_comments= book_cursor["book_comments"]
+        new_comment="test comment"
+        new_comment_author="test comment author"
+        new_comment_list= [ new_comment, new_comment_author]
+        current_comments.append(new_comment_list)
+        book_id= book_cursor['_id']
+        try:
+            with self.test_client as client:
+                response = client.post(f"/insert_comment/{book_id}",
+                                        data={
+                                            'comment_author': new_comment_author,
+                                            'book_comment': new_comment
+                                        }
+                                    )
+                book_search= TestApp.books.find_one({"_id": book_id})
+                self.assertEqual(current_comments, book_search['book_comments'])
+        finally:
+            TestApp.remove_book(self, {"_id": book_id})
     #### STATS page tests  ####
 
     # tests if the book rated the highest today is displayed correctly

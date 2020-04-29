@@ -355,12 +355,16 @@ def insert_genre():
 def insert_author():
     authors = mongo.db.authors
     new_author = request.form.to_dict()
+    author = new_author['author_name'].lower()
     author_count = authors.count_documents(
-        {"author_name": new_author['author_name'].lower()},
+        {"author_name": author},
         limit=1
     )
     if author_count == 0:
-        authors.insert_one(new_author.lower())
+        authors.insert_one({
+            "author_name": author
+            }
+        )
         flash(
             f"Thanks for adding {new_author['author_name'].title()}"
             " to our database!"
