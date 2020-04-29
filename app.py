@@ -73,7 +73,7 @@ def best_ten_books():
             mean_rating = round(
                 mean(
                     [rating_list[0] for rating_list in book['book_rating']]
-                    ),
+                ),
                 1
             )
         best_book_list.append({
@@ -363,7 +363,7 @@ def insert_author():
     if author_count == 0:
         authors.insert_one({
             "author_name": author
-            }
+        }
         )
         flash(
             f"Thanks for adding {new_author['author_name'].title()}"
