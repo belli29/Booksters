@@ -1,7 +1,9 @@
+chardet==3.0.4
 Click==7.0
 dnspython==1.16.0
 Flask==1.1.1
 Flask-PyMongo==2.3.0
+idna==2.9
 itsdangerous==1.1.0
 MouseInfo==0.1.2
 Pillow==7.0.0
@@ -13,4 +15,6 @@ PyRect==0.1.4
 PyScreeze==0.1.26
 python3-xlib==0.15
 PyTweening==1.0.3
+requests==2.23.0
+urllib3==1.25.9
 Werkzeug==0.16.1

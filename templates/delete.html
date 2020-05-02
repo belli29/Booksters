@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% block head %}
+<!-- Jquery-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+{% endblock%}
 {% block header %}
 <h1>Are you sure you want to delete {{book.book_title.title()}} ?</h1>
 {% endblock %}
@@ -6,21 +10,38 @@
 <div class="container text-center">
 	<div class="row">
 		<div class="col-lg-8 col-md-10 mx-auto">
-			<form action="{{ url_for('delete', book_id = book._id) }}">
+			<form action="{{ url_for('verify_password', book_id = book._id, action='delete') }}" method="POST">
 				<div class="form-group">
 					<div class="row">
 						<div class="col-8 col-sm-6 col-lg-12 mx-auto ">
 							<div class="d-flex flex-column flex-lg-row justify-content-center ">
-								<button type="submit" class="btn btn-primary d-flex my-2 justify-content-center" >Yes!</button>
+								<button id="yes" class="btn btn-primary d-flex my-2 justify-content-center" >Yes!</button>
 								<a class="btn btn-secondary d-flex my-2 justify-content-center"
 									href="{{url_for('get_book', book_id=book._id)}}">No</a>
 							</div>
-						</div>
+						</div>      
+					</div>
+                    <div class="row d-none" id="confirm">
+						<div class="col-8 col-sm-6 col-lg-12 mx-auto">
+							<div class="d-flex flex-column flex-lg-row justify-content-center ">
+								<input type="text" class="form-control d-flex my-2 justify-content-center" placeholder="Enter book password" name="password" id="password" required >
+                                <button type="submit" class="btn btn-primary d-flex my-2 justify-content-center mx-1" >Delete</button>
+							</div>
+						</div>      
 					</div>
 				</div>
+                
 			</form>
 		</div>
 	</div>
 </div>
-
+<!-- makes the pasword div visible when user presses yes-->
+<script type="text/javascript">
+function confirm() {           
+    $('#yes').click(function() {
+            $('#confirm').removeClass("d-none")           
+        });
+    };
+confirm()
+</script>
 {% endblock %}

@@ -260,11 +260,14 @@ def insert_book():
         new_book['book_title'] = new_book['book_title'].lower()
         new_book['book_author'] = new_book['book_author'].lower()
         new_book['book_genre'] = new_book['book_genre'].lower()
+        new_book['password'] = new_book['password'].lower()
         new_book['book_rating'] = []
         books.insert_one(new_book)
         flash(
             f"Thanks for adding {new_book['book_title'].title()}"
             " to our database!"
+            f"Please write down your password {new_book['password']}. "
+            "You will need it to edit or delete this book from our database"
         )
     else:
         flash(
@@ -275,27 +278,6 @@ def insert_book():
     return redirect(url_for("get_books"))
 
 
-# updates details of a book in DB
-@app.route('/update_book/<book_id>', methods=["POST"])
-def update_book(book_id):
-    books = mongo.db.books
-    new_details = request.form.to_dict()
-    new_title = new_details["book_title"].lower()
-    new_author = new_details["book_author"].lower()
-    new_description = new_details["book_description"]
-    new_genre = new_details["book_genre"].lower()
-    books.update_one({'_id': ObjectId(book_id)},
-                     {'$set': {
-                         "book_title": new_title,
-                         "book_author": new_author,
-                         "book_genre": new_genre,
-                         "book_description": new_description
-                     }})
-
-    flash(" All info updated!")
-    return redirect(url_for("get_book", book_id=book_id))
-
-
 # directs to the delete page
 @app.route('/delete_book_sure/<book_id>')
 def delete_book_sure(book_id):
@@ -303,6 +285,43 @@ def delete_book_sure(book_id):
     book = books.find_one({"_id": ObjectId(book_id)})
     return render_template('delete.html', book=book)
 
+@app.route('/verify_password/<book_id>/<action>', methods=["POST"])
+def verify_password(book_id, action):
+    books = mongo.db.books
+    book_cursor = books.find({"_id": ObjectId(book_id)})
+    book_dict = list(book_cursor)[0]
+    book_title = book_dict["book_title"]
+    password = (request.form.to_dict())['password']
+    book_password = book_dict["password"]
+    # invalid password
+    if password != book_password:
+        flash("This password is not correct. Try again!")
+        if action == "delete":
+            return redirect(url_for("delete_book_sure", book_id=book_id))
+        elif action == "modify":
+            return redirect(url_for("edit_book", book_id=book_id))
+    # valid password for deliting the book
+    elif action == "delete":
+        return redirect(url_for("delete", book_id=book_id))
+    # valid password for editing the book
+    elif action == "modify":
+        new_details =request.form.to_dict()
+        new_title = new_details["book_title"].lower()
+        new_author = new_details["book_author"].lower()
+        new_description = new_details["book_description"]
+        new_genre = new_details["book_genre"].lower()
+        books.update_one({'_id': ObjectId(book_id)},
+                        {'$set': {
+                            "book_title": new_title,
+                            "book_author": new_author,
+                            "book_genre": new_genre,
+                            "book_description": new_description
+                        }})
+
+        flash(" All info updated!")
+        return redirect(url_for("get_book", book_id=book_id))
+        
+    
 
 # deletes the book selected from DB
 @app.route('/delete/<book_id>')

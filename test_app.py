@@ -3,7 +3,7 @@ import unittest
 from flask import Flask, url_for, render_template, redirect, request
 from datetime import date
 from flask_pymongo import PyMongo
-from app import app, best_ten_books, delete, update_book
+from app import app, best_ten_books, delete, verify_password
 
 
 class TestApp(unittest.TestCase):
@@ -19,6 +19,7 @@ class TestApp(unittest.TestCase):
     # test book
 
     title = "test title"
+    password = "test password"
     author = "test author"
     genre = "test genre"
     description = "test description that ends here. And, then, goes on."
@@ -28,7 +29,8 @@ class TestApp(unittest.TestCase):
         "book_author": author,
         "book_genre": genre,
         "book_description": description,
-        "book_rating": rating
+        "book_rating": rating,
+        "password": password
     }
     ########################
     # HELPER METHODS
@@ -92,7 +94,7 @@ class TestApp(unittest.TestCase):
         finally:
             TestApp.remove_book(self, self.local_test_book)
 
-    # tests response when searcing for a book present in DB,
+    # tests response when searching for a book present in DB,
     # when author has more than 1 book
     def test_author_has_many_books_get_book(self):
         # adding first test book
@@ -274,20 +276,38 @@ class TestApp(unittest.TestCase):
         book_cursor = TestApp.books.find_one(
             {"book_title": self.local_test_book['book_title']})
         book_id = book_cursor['_id']
+        password = book_cursor['password']
+        action = "modify"
         try:
             with self.test_client as client:
-                response = client.post(f"/update_book/{book_id}",
+                response = client.post(f"/verify_password/{book_id}/{action}",
                                        data={
+                                           'password': password,
                                            'book_title': 'updated title',
                                            'book_author': 'updated author',
                                            'book_genre': 'updated genre',
                                            'book_description': (
                                                'updated description'
                                             )
-                                       }
+                                       },
+                                       follow_redirects=True
                                        )
                 book_search = TestApp.books.find_one({"_id": book_id})
                 self.assertEqual('updated title', book_search['book_title'])
+                # checks that the user will not be able to amend the book with wrong password
+                response_wrong_password = client.post(f"/verify_password/{book_id}/{action}",
+                                       data={
+                                           'password': 'wrong passowrd',
+                                           'book_title': 'updated title',
+                                           'book_author': 'updated author',
+                                           'book_genre': 'updated genre',
+                                           'book_description':'updated description',
+                                       },
+                                       follow_redirects=True
+                                       )
+                self.assertIn(
+                    b'This password is not correct. Try again!', response_wrong_password.data)
+
         finally:
             TestApp.remove_book(self, {"book_title": "updated title"})
 
