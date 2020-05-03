@@ -288,25 +288,30 @@ class TestApp(unittest.TestCase):
                                            'book_genre': 'updated genre',
                                            'book_description': (
                                                'updated description'
-                                            )
+                                           )
                                        },
                                        follow_redirects=True
                                        )
                 book_search = TestApp.books.find_one({"_id": book_id})
                 self.assertEqual('updated title', book_search['book_title'])
-                # checks that the user will not be able to amend the book with wrong password
-                response_wrong_password = client.post(f"/verify_password/{book_id}/{action}",
-                                       data={
-                                           'password': 'wrong passowrd',
-                                           'book_title': 'updated title',
-                                           'book_author': 'updated author',
-                                           'book_genre': 'updated genre',
-                                           'book_description':'updated description',
-                                       },
-                                       follow_redirects=True
-                                       )
+                # checks that the user will not be able to amend the book
+                # with wrong password
+                response_wrong_pwd = client.post(f"/verify_password/{book_id}/{action}",
+                                     data={
+                                            'password': 'wrong passowrd',
+                                            'book_title': 'updated title',
+                                            'book_author': 'updated author',
+                                            'book_genre': 'updated genre',
+                                            'book_description': (
+                                                'updated description'
+                                                ),
+                                             },
+                                            follow_redirects=True
+                                        )
                 self.assertIn(
-                    b'This password is not correct. Try again!', response_wrong_password.data)
+                    b'This password is not correct. Try again!',
+                    response_wrong_pwd.data
+                )
 
         finally:
             TestApp.remove_book(self, {"book_title": "updated title"})

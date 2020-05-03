@@ -17,7 +17,6 @@
 						<input type="text" class="form-control" value="{{book.book_title.title()}}" name="book_title" id="book_title" required >
                 </div>
 					</div>
-
 					<div class="control-group">
 						<div class="form-group col-xs-12 floating-label-form-group controls">
 							<label>Choose an author</label>
@@ -59,33 +58,32 @@
 						<div class="row">
 							<div class="col-8 col-sm-6 col-lg-12 mx-auto ">
 								<div class="d-flex flex-column flex-lg-row justify-content-center">
-									<a class="btn btn-secondary d-flex justify-content-center  my-2"
+									<a class="btn btn-secondary d-flex justify-content-center my-2"
 										href="{{ url_for('get_book', book_id= book._id) }}">Come back to book </a>
-									<button id="yes" class="btn btn-primary d-flex justify-content-center  my-2" >Edit book</button>
+									<button id="yes" class="btn btn-primary d-flex justify-content-center my-2" >Edit book</button>
 								</div>
 							</div>
 						</div>
-                         <div class="row d-none " id="confirm">
-                            <div class="col-8 col-sm-6 col-lg-12 mx-auto">
-                                <div class="d-flex flex-column flex-lg-row justify-content-center ">
-                                    <input type="text" class="form-control d-flex my-2 justify-content-center" placeholder="Enter book password" name="password" id="password" required >
-                                    <button type="submit" class="btn btn-primary d-flex my-2 justify-content-center mx-1" >Confirm!</button>
-                                </div>
-                            </div>      
-                        </div>
+						<div class="row d-none " id="confirm">
+							<div class="col-5 mx-auto">
+								<input type="text" class="form-control d-flex my-2 justify-content-center" placeholder="Enter book password" name="password" id="password" required >
+							</div>
+							</div>
+						</div>
 					</div>
-				</div>
 
+				</div>
+			</form>
 		</div>
-		</form>
 	</div>
-</div>
 </div>
 <!-- makes the pasword div visible when user presses yes-->
 <script type="text/javascript">
-function confirm() {           
+	confirmDiv = '<button type="submit" class="btn btn-danger d-flex my-2 justify-content-center">Modify</button>'
+	function confirm() {           
     $('#yes').click(function() {
-            $('#confirm').removeClass("d-none")           
+            $('#confirm').removeClass("d-none");
+            $(this).replaceWith(confirmDiv)             
         });
     };
 confirm()

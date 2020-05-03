@@ -19,27 +19,25 @@
 								<a class="btn btn-secondary d-flex my-2 justify-content-center"
 									href="{{url_for('get_book', book_id=book._id)}}">No</a>
 							</div>
-						</div>      
+						</div>
 					</div>
-                    <div class="row d-none" id="confirm">
-						<div class="col-8 col-sm-6 col-lg-12 mx-auto">
-							<div class="d-flex flex-column flex-lg-row justify-content-center ">
-								<input type="text" class="form-control d-flex my-2 justify-content-center" placeholder="Enter book password" name="password" id="password" required >
-                                <button type="submit" class="btn btn-primary d-flex my-2 justify-content-center mx-1" >Delete</button>
-							</div>
-						</div>      
+					<div class="row d-none" id="confirm">
+						<div class="col-5 mx-auto">
+							<input type="text" class="form-control d-flex my-2 justify-content-center" placeholder="Enter password" name="password" id="password" required >
+						</div>
+						</div>
 					</div>
-				</div>
-                
 			</form>
 		</div>
 	</div>
 </div>
 <!-- makes the pasword div visible when user presses yes-->
 <script type="text/javascript">
-function confirm() {           
+	function confirm() {
+    confirmDiv = '<button type="submit" class="btn btn-danger d-flex my-2 justify-content-center" >Delete</button>'         
     $('#yes').click(function() {
-            $('#confirm').removeClass("d-none")           
+            $('#confirm').removeClass("d-none");
+            $(this).replaceWith(confirmDiv)              
         });
     };
 confirm()

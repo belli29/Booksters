@@ -285,6 +285,7 @@ def delete_book_sure(book_id):
     book = books.find_one({"_id": ObjectId(book_id)})
     return render_template('delete.html', book=book)
 
+
 @app.route('/verify_password/<book_id>/<action>', methods=["POST"])
 def verify_password(book_id, action):
     books = mongo.db.books
@@ -305,23 +306,22 @@ def verify_password(book_id, action):
         return redirect(url_for("delete", book_id=book_id))
     # valid password for editing the book
     elif action == "modify":
-        new_details =request.form.to_dict()
+        new_details = request.form.to_dict()
         new_title = new_details["book_title"].lower()
         new_author = new_details["book_author"].lower()
         new_description = new_details["book_description"]
         new_genre = new_details["book_genre"].lower()
         books.update_one({'_id': ObjectId(book_id)},
-                        {'$set': {
-                            "book_title": new_title,
-                            "book_author": new_author,
-                            "book_genre": new_genre,
-                            "book_description": new_description
-                        }})
+                            {'$set': {
+                                "book_title": new_title,
+                                "book_author": new_author,
+                                "book_genre": new_genre,
+                                "book_description": new_description
+                            }})
 
         flash(" All info updated!")
         return redirect(url_for("get_book", book_id=book_id))
-        
-    
+
 
 # deletes the book selected from DB
 @app.route('/delete/<book_id>')

@@ -35,14 +35,15 @@
 <div class="row">
 	<div class="col-md-6 border p-5 stats-item">
 		<h1 class="text-center">What is the most voted book ? </h1>
-		<p>The book that was voted most times is <a href="{{url_for('get_book', book_id=top_voted._id)}}">{{ top_voted.book_title.title() }}</a>. 
-        Users have rated it {{ top_voted.book_votes }} times.</p>
+		<p>The book that was voted most times is <a href="{{url_for('get_book', book_id=top_voted._id)}}">{{ top_voted.book_title.title() }}</a>.
+			Users have rated it {{ top_voted.book_votes }} times.</p>
 	</div>
 	<div class="col-md-6 border p-5 stats-item">
 		<h1 class="text-center">What is the top-rated book of today ? </h1>
 		{% if top_rated_today[2] == 0 %}
 		<p>Today, {{current_date}}, no book was rated.</p>
-		<p> What about sharing your opinion on a book in our database today? Just go on any book and click on Rate Book!
+		<p> What about sharing your opinion on a book in our database today?
+			<a href="{{url_for('get_books')}}">Just go on any book and click on Rate Book!</a>
 		</p>
 		{% else %}
 		<p>Today, {{current_date}}, the top rated book is <a href="{{url_for('get_book', book_id=top_rated_today[0])}}">{{top_rated_today[1].title()}}</a> with {{ top_rated_today[2] }}/5 overall score. </p>
@@ -85,7 +86,7 @@
 	</div>
 </div>
 <script>
-//the script is triggered by a change in the field AUTHOR
+	//the script is triggered by a change in the field AUTHOR
 $("select#author_select").change(function() {
     //gets user choice
     author = $(this).find("option:selected").text();
