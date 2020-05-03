@@ -5,8 +5,9 @@ The website is thought as a comunity of books fans where info and opinions on bo
 ## Tutorial
 
 The user can see information about books, create new book entries, delete or update existing ones (CRUD).
-In the homepage the guest can search for a book or choose to consult one from the list.
-The user can also choose in the list by genre or author.
+In the homepage the guest can search for a book or choose to consult one from the list. The user can also choose in the list by genre or author. 
+Edit/delete option can only be performed with a password that is set when the book is added.
+In order to test the exisiting books, consider that password is "12"
 
 In the book page the guest will find the basic info about the book and will be able to do the following:
 1. update the book info (limited to the user that created it)
@@ -15,8 +16,7 @@ In the book page the guest will find the basic info about the book and will be a
 4. leave a review
 5. go to the store to buy it (this functionality has not been developed)
 
-The user can create a book.
-The user will be able to choose an existing genre / author or add a new one.
+The user can create a book. The user will be able to choose an existing genre / author or add a new one.
 
 In the STATS page the user can see the following:
 1. top 10 rated books
@@ -84,15 +84,26 @@ In order to deal with errors (author with no books) I have added a catch() funct
 As my code was growing, I had noticed a lot of it was getting repeated . 
 In order to achieve a DRY code, I have decided to make us of few helper functions.
 
-### Unit Testing
+## Features/Technologies
+1. Python 3 and Flask framework 
+2. Mongo DB Atlas
+3. Javascript (JQuery)
+4. Bootstrap 4
 
-#### Mongo DB interaction : GET functions
+## Testing
+
+The testing of the python code was done mainly by automatic testing in the file test_app.py.
+Some extra manual testing was also done.
+Javascript code was tested manually.
+During the development of my Unit Test module I encountered few problems:
+
+### Mongo DB interaction : GET functions
 
 Being the app based on a database, it is crucial that the app responds to data modification in the expected way.
 
 For GET functions I was able to achieve this simply using test DB entries and a test client pointed to the correct url.
 
-#### Mongo DB interaction : POST functions (checking DB)
+### Mongo DB interaction : POST functions (checking DB)
 
 Testing POST function where the user was actually amending the content of the DB was more complex.
 
@@ -100,7 +111,7 @@ In this case I had to feed a test client with the content of the data posted .
 
 After that, I could verify if the DB content was correct by a simple search.
 
-#### Mongo DB interaction : POST functions (checking response)
+### Mongo DB interaction : POST functions (checking response)
 
 In some cases I did not only wanted to check that the DB was correctly amended but also that the guest was informed correctly on screen.
 
@@ -111,19 +122,6 @@ The following problem was that data response was just showing a redirection mess
 This would not allow me to check what guest could seen on screen.
 
 The problem was solved by setting the parameter "follow_redirects" to True.
-
-
-## Features/Technologies
-1. Python 3 and Flask framework 
-2. Mongo DB Atlas
-3. Javascript (JQuery)
-4. Bootstrap 4
-
-## Testing
-
-The testing of the python code was done mainly by automatic testing in the file test_app.py.
-Some extra manual tesitng was also done.
-Javascript code was tested manually
 
 ## Deployment
 
