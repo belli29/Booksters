@@ -1,6 +1,7 @@
 # Booksters
+[Click here to view the app](https://booksters.herokuapp.com/)
 
-The website is thought as a comunity of books fans where info and opinions on books can be shared.
+The app is thought as a comunity of books fans where info and opinions on books can be shared.
 
 ## Tutorial
 
