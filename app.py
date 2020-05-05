@@ -136,7 +136,7 @@ def get_book(book_id):
     else:
         return render_template('book.html', book=book)
 
-
+# when book is not found in DB, user is redirected
 @app.route('/book_not_found/<book_input>')
 def get_book_error(book_input):
     return render_template('books.html',
@@ -144,7 +144,7 @@ def get_book_error(book_input):
                            error_message=True,
                            book_input=book_input.title())
 
-
+# based on user imputed a search is carried on in DB
 @app.route('/search_book/', methods=["POST"])
 def search_book():
     book_input = request.form.get('book_input')
@@ -155,7 +155,7 @@ def search_book():
     else:
         return redirect(url_for("get_book_error", book_input=book_input))
 
-
+# directs to list of books by genre selected
 @app.route('/get_books_genre/<genre_name>')
 def get_books_by_genre(genre_name):
     books_cursor = mongo.db.books.find({"book_genre": genre_name})
@@ -166,7 +166,7 @@ def get_books_by_genre(genre_name):
         genre=genre_name
     )
 
-
+# directs to list of books by author selected
 @app.route('/get_books_author/<author_name>')
 def get_books_by_author(author_name):
     books_cursor = mongo.db.books.find({"book_author": author_name})
@@ -177,22 +177,22 @@ def get_books_by_author(author_name):
         author=author_name
     )
 
-
+# directs to list of authors
 @app.route('/get_authors')
 def get_authors():
     return render_template('authors.html', authors=mongo.db.authors.find())
 
-
+# directs to list of genres
 @app.route('/get_genres')
 def get_genres():
     return render_template('genres.html', genres=mongo.db.genres.find())
 
-
+# directs to about page
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-
+# directs to stats page after defining current dates, top-rated and top-voted books
 @app.route('/stats')
 def stats():
     books = list(mongo.db.books.find())
@@ -233,12 +233,12 @@ def add_book():
                            genres=mongo.db.genres.find(),
                            authors=mongo.db.authors.find())
 
-
+# directs to add_genre page
 @app.route('/add_genre')
 def add_genre():
     return render_template('add_genre.html')
 
-
+# directs to add_author page
 @app.route('/add_author')
 def add_author():
     return render_template('add_author.html')
@@ -285,7 +285,7 @@ def delete_book_sure(book_id):
     book = books.find_one({"_id": ObjectId(book_id)})
     return render_template('delete.html', book=book)
 
-
+# verifies the password for delete and edit function 
 @app.route('/verify_password/<book_id>/<action>', methods=["POST"])
 def verify_password(book_id, action):
     books = mongo.db.books
@@ -294,14 +294,15 @@ def verify_password(book_id, action):
     book_title = book_dict["book_title"]
     password = (request.form.to_dict())['password']
     book_password = book_dict["password"]
-    # invalid password
+    # invalid password for deleting the book
     if password != book_password:
         flash("This password is not correct. Try again!")
         if action == "delete":
             return redirect(url_for("delete_book_sure", book_id=book_id))
+    # invalid password for editing the book
         elif action == "modify":
             return redirect(url_for("edit_book", book_id=book_id))
-    # valid password for deliting the book
+    # valid password for deleting the book
     elif action == "delete":
         return redirect(url_for("delete", book_id=book_id))
     # valid password for editing the book
@@ -347,7 +348,7 @@ def edit_book(book_id):
         authors=mongo.db.authors.find()
     )
 
-
+# insert a new genre in DB if that is not present
 @app.route('/insert_genre', methods=["POST"])
 def insert_genre():
     genres = mongo.db.genres
@@ -369,7 +370,7 @@ def insert_genre():
         )
     return redirect(url_for("add_book"))
 
-
+# insert a new author in DB if that is not present
 @app.route('/insert_author', methods=["POST"])
 def insert_author():
     authors = mongo.db.authors
@@ -396,7 +397,7 @@ def insert_author():
     return redirect(url_for("add_book"))
 
 
-# add a comment
+# directs to add a comment section
 @app.route('/comment/<book_id>')
 def add_comment(book_id):
     book = mongo.db.books.find_one({"_id": ObjectId(book_id)})
@@ -427,7 +428,7 @@ def insert_comment(book_id):
     )
     return redirect(url_for("get_book", book_id=book_id))
 
-
+# directs to "rate a book" section 
 @app.route('/vote/<book_title>')
 def update_rating(book_title):
     book = mongo.db.books.find_one({"book_title": book_title})
