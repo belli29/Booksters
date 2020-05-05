@@ -91,11 +91,9 @@ In order to achieve a DRY code, I have decided to make us of few helper function
 3. Javascript (JQuery)
 4. Bootstrap 4
 
-## Testing
+## Automathd Testing
 
-The testing of the python code was done mainly by automatic testing in the file test_app.py.
-Some extra manual testing was also done.
-Javascript code was tested manually.
+The testing of the Python code was done by automatic testing in the file test_app.py.
 During the development of my Unit Test module I encountered few problems:
 
 ### Mongo DB interaction : GET functions
@@ -124,9 +122,35 @@ This would not allow me to check what guest could seen on screen.
 
 The problem was solved by setting the parameter "follow_redirects" to True.
 
+## Manual testing
+
+The testing of the Javascript code was done  by manual testing.
+
+### Stats page
+
+I tested the "What is the highest rated book of (author)?" section. 
+I selected "Charles Dickens" and compared the results in the chart with the data in DB.
+
+I tested the "What is the highest rated book of genre(genre)?" section. 
+I selected "historic novel " and compared the results in the chart with the data in DB.
+
+### Rate book page
+
+I have tested manually if the stars were highlighted when mouse was entering and the opposite when mouse was leaving.
+
+### Delete/ Edit page : Enter book password
+
+I have checked that when clicking on it,  Delete or Edit button was changin colour and the passsword field was appearing. 
+
 ## Deployment
 
-The app was deployed on Heroku
+The app was deployed on Heroku following these steps:
+
+1. A Heroku app was created
+2. Local Git repository was linked to Heroku
+3. requirements.txt file was created 
+4. Procfile was created to tell Heroku how to run our project
+5. Local variables were set in Heroku (IP, PORT and SECRET_KEY)
 
 ## Acknowledgments and contributions
 
