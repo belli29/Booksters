@@ -140,7 +140,7 @@ I have tested manually if the stars were highlighted when mouse was entering and
 
 ### Delete/ Edit page : Enter book password
 
-I have checked that when clicking on it,  Delete or Edit button was changin colour and the passsword field was appearing. 
+I have checked that when clicking on it,  Delete or Edit button was changing colour and the passsword field was appearing. 
 
 ## Deployment
 
